@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Editor / IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+
+# Local development files
+*.local
+
+# PHP / server local configuration
+php/config.local.php
+
+# Database files
+*.sql
+*.sqlite
+*.sqlite3
+
+# Backups
+backup/
+backups/
+*.bak
+
+# Uploaded/generated temporary files
+uploads/temp/
