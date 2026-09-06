@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, MessageCircle, Sparkles, Compass } from 'lucide-react';
+import { ArrowRight, MessageCircle, Sparkles } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
 
 export default function Hero({ onExploreStore, onSelectProduct }) {
@@ -7,8 +7,8 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
 
   const handleMouseMove = (e) => {
     const { innerWidth, innerHeight } = window;
-    const x = (e.clientX / innerWidth - 0.5) * 20;
-    const y = (e.clientY / innerHeight - 0.5) * 20;
+    const x = (e.clientX / innerWidth - 0.5) * 16;
+    const y = (e.clientY / innerHeight - 0.5) * 16;
     setMouseOffset({ x, y });
   };
 
@@ -16,18 +16,22 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
 
   return (
     <section className="master-hero-stage" onMouseMove={handleMouseMove}>
-      {/* Background Depth Layer: Atmospheric Ambient Glows */}
+      {/* Background Depth Layer: Atmospheric Light Green Glows */}
       <div className="hero-ambient-orb hero-ambient-one" />
       <div className="hero-ambient-orb hero-ambient-two" />
       
-      {/* Background Watermark Typography */}
+      {/* Background Watermark Image — ACTUAL LOGO DO ASSET */}
       <div 
-        className="hero-ghost-typography"
+        className="hero-logo-watermark-wrapper"
         style={{
-          transform: `translate(${mouseOffset.x * -0.5}px, ${mouseOffset.y * -0.5}px)`
+          transform: `translate(${mouseOffset.x * -0.4}px, ${mouseOffset.y * -0.4}px)`
         }}
       >
-        DHANAM
+        <img 
+          src="./images/logo/logo-do.png" 
+          alt="Dhanam Organics Watermark" 
+          className="hero-logo-do-watermark"
+        />
       </div>
 
       <div className="container hero-content-relative">
@@ -43,7 +47,7 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
 
         {/* Asymmetrical Hero Grid */}
         <div className="hero-editorial-grid">
-          {/* Left Column: Editorial Typography & Intent */}
+          {/* Left Column: Editorial Typography */}
           <div className="hero-text-column">
             <h1 className="hero-main-title">
               Ancestral Soil.
@@ -101,7 +105,7 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
           <div 
             className="hero-visual-pedestal-stage"
             style={{
-              transform: `translate(${mouseOffset.x * 0.4}px, ${mouseOffset.y * 0.4}px)`
+              transform: `translate(${mouseOffset.x * 0.3}px, ${mouseOffset.y * 0.3}px)`
             }}
           >
             <div className="hero-pedestal-ground" />

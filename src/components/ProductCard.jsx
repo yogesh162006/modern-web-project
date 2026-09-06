@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Plus, Eye, ShoppingBag, Sparkles } from 'lucide-react';
+import { MessageCircle, Plus, Eye, ShoppingBag } from 'lucide-react';
 import { getWhatsAppOrderUrl } from '../config/siteConfig';
 
 export default function ProductCard({ product, index, onSelect, onAddToCart, darkTheme = false }) {
@@ -12,7 +12,6 @@ export default function ProductCard({ product, index, onSelect, onAddToCart, dar
     price: product.price
   });
 
-  // Calculate formatted index like № 01, № 02
   const formattedIndex = index !== undefined 
     ? `№ 0${index + 1}` 
     : (product.id ? `№ 0${product.id}` : '№ 01');
@@ -20,8 +19,8 @@ export default function ProductCard({ product, index, onSelect, onAddToCart, dar
   // Subtle 3D tilt calculation on mouse move
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
     setMousePos({ x, y, active: true });
   };
 
@@ -31,7 +30,7 @@ export default function ProductCard({ product, index, onSelect, onAddToCart, dar
 
   return (
     <article 
-      className={`vault-product-card ${darkTheme ? 'vault-card-dark' : 'vault-card-sandal'}`}
+      className={`vault-product-card ${darkTheme ? 'vault-card-dark' : 'vault-card-light'}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
@@ -48,7 +47,7 @@ export default function ProductCard({ product, index, onSelect, onAddToCart, dar
         )}
       </div>
 
-      {/* Product Image Stage with Ambient Pedestal */}
+      {/* Product Image Stage with Ambient Light Green Pedestal */}
       <div 
         className="vault-image-stage"
         onClick={() => onSelect && onSelect(product)}

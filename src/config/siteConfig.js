@@ -11,7 +11,7 @@ export const SITE_CONFIG = {
   // OWNER WHATSAPP CONFIGURATION (Single source of truth)
   whatsapp: {
     phoneNumber: '918072727394', // Store owner WhatsApp number (Country code + 10 digits)
-    displayNumber: '+91 918072727394',
+    displayNumber: '+91 8072727394',
     greetingPrefix: 'Hi, I would like to order:',
     supportHours: '9:00 AM - 8:00 PM (Mon - Sat)'
   },

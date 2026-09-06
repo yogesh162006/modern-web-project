@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import StorePage from './pages/StorePage';
 import ProductDetailModal from './components/ProductDetailModal';
 import QuickOrderDrawer from './components/QuickOrderDrawer';
+import CustomCursor from './components/CustomCursor';
 import { fetchProducts } from './services/api';
 import { PRODUCTS } from './data/products';
 
@@ -79,6 +80,9 @@ export default function App() {
 
   return (
     <div className="app-root">
+      {/* 144Hz Hardware-Accelerated Custom Cursor */}
+      <CustomCursor />
+
       {/* Navigation Bar */}
       <Navbar 
         activePage={activePage}
