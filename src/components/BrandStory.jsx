@@ -1,56 +1,87 @@
 import React from 'react';
-import { Heart, Sparkles, Sprout, ShieldCheck } from 'lucide-react';
-import { SITE_CONFIG } from '../config/siteConfig';
+import { ArrowRight } from 'lucide-react';
 
-export default function BrandStory() {
+export default function BrandStory({ onExploreStory }) {
   return (
-    <section id="heritage-story" className="section story-section">
+    <section id="heritage-story" className="heritage-editorial-section">
+      <div className="heritage-watermark-bg">பாரம்பரியம்</div>
+
       <div className="container">
-        <div className="story-grid">
-          {/* Text Story */}
-          <div className="story-text-block">
-            <span className="section-pretitle">Ancestral Wisdom</span>
-            <h2>Rooted in Soil, Ground with Care</h2>
-            <p>
-              In our grandmothers’ kitchens across Tamil Nadu, food was never simply fuel—it was medicine, balance, and pure daily joy. Freshly harvested leaves of <em>Curry Leaves</em> were carefully cleaned, sun-dried, and traditionally ground to preserve their natural aroma and goodness, creating a wholesome podi that brings together authentic flavour, cherished wisdom, and the timeless taste of home.
-            </p>
-            <p>
-              At <strong>Dhanam Organics</strong>, we revive that sacred reverence for pure food. Modern high-speed commercial pulverizers generate scorching heat that destroys delicate natural nutrients and vital aromatics. That is why we adhere to slow, gentle stone-grinding and small-batch roasting—retaining the original aroma, taste, and wholesome healing nature of the harvest.
+        {/* Section Header */}
+        <div className="heritage-section-header">
+          <div className="heritage-kicker">OUR LIVING PHILOSOPHY • மரபு வழி மருத்துவம்</div>
+          <h2 className="heritage-headline">
+            Why We Refuse to Mill Above 28 RPM.
+          </h2>
+          <p className="heritage-sublead">
+            In ancestral Tamil households, food was crafted with mindful patience. We preserve that holy reverence in every batch we produce.
+          </p>
+        </div>
+
+        {/* Magazine Grid Layout */}
+        <div className="heritage-magazine-grid">
+          {/* Left Column: Authentic Story Narrative */}
+          <div className="heritage-narrative-block">
+            <p className="heritage-dropcap-para">
+              <span className="heritage-dropcap">I</span>n our grandmothers’ kitchens across Tamil Nadu, food was never simply fuel—it was medicine, balance, and pure daily joy. Freshly harvested leaves of <em>Curry Leaves</em> were carefully cleaned, sun-dried, and traditionally ground to preserve their natural aroma and goodness, creating a wholesome podi that brings together authentic flavour, cherished wisdom, and the timeless taste of home.
             </p>
 
-            <div className="story-values-list">
-              <div className="story-value-box">
-                <h4>Slow Stone-Grinding</h4>
-                <p>Gentle low-temperature milling ensures essential oils and active bio-compounds remain 100% intact.</p>
+            <p className="heritage-standard-para">
+              Modern industrial high-speed pulverizers operate at thousands of revolutions per minute, creating scorching frictional heat that destroys delicate natural nutrients, alters volatile spice oils, and scorches the harvest. That is why <strong>Dhanam Organics</strong> strictly adheres to low-temperature slow stone-milling and earthen pot roasting—locking in genuine aroma, vibrant color, and ancestral therapeutic potency.
+            </p>
+
+            {/* 4 Tenets with Roman Numerals */}
+            <div className="heritage-tenets-grid">
+              <div className="heritage-tenet-item">
+                <span className="tenet-num">I</span>
+                <div>
+                  <h4>Stone-Ground Milling</h4>
+                  <p>Preserves delicate essential oils and rich roasted bouquet.</p>
+                </div>
               </div>
-              <div className="story-value-box">
-                <h4>Direct Organic Sourcing</h4>
-                <p>Handpicked ingredients harvested sustainably from certified and ethical organic farmers.</p>
+
+              <div className="heritage-tenet-item">
+                <span className="tenet-num">II</span>
+                <div>
+                  <h4>Zero Synthetic Additives</h4>
+                  <p>Never any MSG, artificial colorings, or chemical flow agents.</p>
+                </div>
               </div>
-              <div className="story-value-box">
-                <h4>Zero Chemical Preservatives</h4>
-                <p>No synthetic chemicals, artificial anti-caking powders, MSG, or artificial food colorings.</p>
+
+              <div className="heritage-tenet-item">
+                <span className="tenet-num">III</span>
+                <div>
+                  <h4>Direct Ethical Harvest</h4>
+                  <p>Sourced from native organic growers committed to soil fertility.</p>
+                </div>
               </div>
-              <div className="story-value-box">
-                <h4>Small Batch Freshness</h4>
-                <p>Crafted weekly in small batches so your family experiences the true aroma of a home-cooked harvest.</p>
+
+              <div className="heritage-tenet-item">
+                <span className="tenet-num">IV</span>
+                <div>
+                  <h4>Fresh Small-Batches</h4>
+                  <p>Milled weekly to ensure your family enjoys peak freshness.</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Visual Showcase Card */}
-          <div className="story-visual-card">
-            <img 
-              src="./images/products/karuveppilai-podi.png" 
-              alt="Dhanam Organics Karuveppilai Podi" 
-              style={{ maxHeight: '280px', objectFit: 'contain', margin: '0 auto 16px' }}
-            />
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: 'var(--color-forest-dark)', marginBottom: '6px' }}>
-              கருவேப்பிலை பொடி
-            </h3>
-            <p style={{ fontSize: '13.5px', color: 'var(--color-charcoal-muted)', lineHeight: '1.5' }}>
-              Whole organic curry leaves slow-roasted with native lentils and hand-pounded black pepper. Real food as intended by nature.
-            </p>
+          {/* Right Column: Featured Product Jar Spotlight */}
+          <div className="heritage-spotlight-card">
+            <div className="heritage-jar-pedestal">
+              <img 
+                src="./images/products/karuveppilai-podi.png" 
+                alt="Karuveppilai Podi Heritage Spotlight" 
+                className="heritage-spotlight-img"
+              />
+            </div>
+            <div className="heritage-spotlight-meta">
+              <span className="heritage-spotlight-tag">NATIVE HARVEST</span>
+              <h3 className="heritage-spotlight-title">கருவேப்பிலை பொடி</h3>
+              <p className="heritage-spotlight-desc">
+                Handpicked organic curry leaves, sun-dried and stone-roasted with heirloom lentils. Naturally rich in dietary iron and essential antioxidants.
+              </p>
+            </div>
           </div>
         </div>
       </div>

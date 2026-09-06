@@ -1,83 +1,128 @@
-import React from 'react';
-import { MessageCircle, Plus, Eye, ShoppingBag } from 'lucide-react';
+import React, { useState } from 'react';
+import { MessageCircle, Plus, Eye, ShoppingBag, Sparkles } from 'lucide-react';
 import { getWhatsAppOrderUrl } from '../config/siteConfig';
 
-export default function ProductCard({ product, onSelect, onAddToCart }) {
+export default function ProductCard({ product, index, onSelect, onAddToCart, darkTheme = false }) {
   if (!product) return null;
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0, active: false });
 
   const whatsappUrl = getWhatsAppOrderUrl(product.name, 1, {
     weight: product.weight,
     price: product.price
   });
 
-  return (
-    <article className="product-card">
-      {/* Badge if present */}
-      {product.badge && (
-        <span className={`product-card-badge ${product.badge === 'Bestseller' ? 'badge-bestseller' : ''}`}>
-          {product.badge}
-        </span>
-      )}
+  // Calculate formatted index like № 01, № 02
+  const formattedIndex = index !== undefined 
+    ? `№ 0${index + 1}` 
+    : (product.id ? `№ 0${product.id}` : '№ 01');
 
-      {/* Product Image Area */}
+  // Subtle 3D tilt calculation on mouse move
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    setMousePos({ x, y, active: true });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: 0, y: 0, active: false });
+  };
+
+  return (
+    <article 
+      className={`vault-product-card ${darkTheme ? 'vault-card-dark' : 'vault-card-sandal'}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: mousePos.active 
+          ? `perspective(1000px) rotateX(${mousePos.y}deg) rotateY(${mousePos.x}deg) translateY(-6px)` 
+          : 'none'
+      }}
+    >
+      {/* Top Meta Bar */}
+      <div className="vault-card-header">
+        <span className="vault-index">{formattedIndex}</span>
+        {product.badge && (
+          <span className="vault-badge">{product.badge}</span>
+        )}
+      </div>
+
+      {/* Product Image Stage with Ambient Pedestal */}
       <div 
-        className="product-image-box"
-        onClick={() => onSelect(product)}
-        title={`View details of ${product.name}`}
+        className="vault-image-stage"
+        onClick={() => onSelect && onSelect(product)}
+        title={`Inspect ${product.name}`}
       >
+        <div className="vault-ambient-pedestal" />
         <img 
           src={product.image} 
           alt={product.name} 
-          className="product-thumb-img"
+          className="vault-product-img"
           loading="lazy"
         />
+        
+        {/* Quick View Floating Pill */}
+        <button 
+          type="button" 
+          className="vault-quickview-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onSelect) onSelect(product);
+          }}
+          aria-label="Quick View"
+        >
+          <Eye size={13} />
+          <span>Quick View</span>
+        </button>
       </div>
 
-      {/* Product Information */}
-      <div className="product-card-body">
-        <span className="product-category-tag">{product.category}</span>
-        
+      {/* Content Body */}
+      <div className="vault-card-content">
+        <div className="vault-category-tag">{product.category}</div>
+
         <h3 
-          className="product-card-title" 
-          onClick={() => onSelect(product)}
+          className="vault-card-title"
+          onClick={() => onSelect && onSelect(product)}
         >
           {product.name}
         </h3>
 
-        <div className="product-card-tamil">
+        <div className="vault-tamil-title">
           {product.tamilName}
         </div>
 
-        {/* Price & Weight Row */}
-        <div className="product-meta-row">
-          <div className="product-price-block">
-            <span className="product-price">₹{product.price}</span>
+        {/* Price & Weight Line */}
+        <div className="vault-meta-row">
+          <div className="vault-price-box">
+            <span className="vault-currency">₹</span>
+            <span className="vault-amount">{product.price}</span>
             {product.originalPrice && (
-              <span className="product-original-price">₹{product.originalPrice}</span>
+              <span className="vault-original-price">₹{product.originalPrice}</span>
             )}
           </div>
-          <span className="product-weight">{product.weight}</span>
+          <span className="vault-weight-pill">{product.weight}</span>
         </div>
 
-        {/* Actions Row */}
-        <div className="product-card-actions">
+        {/* Order CTAs */}
+        <div className="vault-card-actions">
           <a 
             href={whatsappUrl} 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="btn btn-whatsapp btn-sm"
-            title="Order directly on WhatsApp"
+            className="vault-btn-whatsapp"
+            title="Order directly via WhatsApp"
           >
             <MessageCircle size={15} />
             <span>Order</span>
           </a>
 
           <button 
-            type="button" 
-            onClick={() => onAddToCart && onAddToCart(product)} 
-            className="btn btn-outline btn-sm"
-            title="Add to order list"
-            aria-label="Add to bag"
+            type="button"
+            onClick={() => onAddToCart && onAddToCart(product)}
+            className="vault-btn-bag"
+            title="Add to WhatsApp Order Bag"
+            aria-label="Add to Bag"
           >
             <Plus size={15} />
             <ShoppingBag size={14} />

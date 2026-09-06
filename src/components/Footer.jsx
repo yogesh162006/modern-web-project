@@ -1,118 +1,130 @@
 import React from 'react';
-import { MessageCircle, Phone, MapPin, Mail, ShieldCheck } from 'lucide-react';
+import { MessageCircle, Shield, ArrowUp, Sparkles, MapPin, Phone } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
 
 export default function Footer({ onNavigate }) {
-  const whatsappUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to inquire about your organic products.')}`;
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const whatsappDirectUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to inquire about your products and place an order.')}`;
 
   return (
-    <footer className="footer">
+    <footer className="master-footer">
       <div className="container">
-        <div className="footer-grid">
-          {/* Brand Info */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+        {/* Top Concierge Callout */}
+        <div className="footer-concierge-banner">
+          <div className="concierge-text-box">
+            <span className="concierge-kicker">PERSONAL KITCHEN DISPATCH</span>
+            <h3 className="concierge-heading">Direct WhatsApp Ordering & Consultations</h3>
+            <p className="concierge-desc">
+              Need custom quantities, bulk orders, or recommendations for specific wellness needs? Our kitchen concierge is available directly on WhatsApp.
+            </p>
+          </div>
+          <a 
+            href={whatsappDirectUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="footer-whatsapp-cta"
+          >
+            <MessageCircle size={20} />
+            <span>Connect on WhatsApp</span>
+          </a>
+        </div>
+
+        {/* Main Footer Grid */}
+        <div className="footer-columns-grid">
+          {/* Brand Column */}
+          <div className="footer-brand-col">
+            <div className="footer-logo-row">
               <img 
                 src="./images/logo/logo.jpeg" 
-                alt="Dhanam Organics" 
-                style={{ height: '48px', width: 'auto', background: '#fff', borderRadius: '4px', padding: '2px' }} 
+                alt="Dhanam Organics Emblem" 
+                className="footer-brand-logo" 
               />
               <div>
-                <div className="footer-brand-title">{SITE_CONFIG.brandName}</div>
-                <div className="footer-brand-tamil">{SITE_CONFIG.brandNameTamil}</div>
+                <span className="footer-brand-name">{SITE_CONFIG.brandName}</span>
+                <span className="footer-brand-tamil">{SITE_CONFIG.brandNameTamil}</span>
               </div>
             </div>
-            <p className="footer-tagline">
-              {SITE_CONFIG.subTagline}
+            <p className="footer-brand-ethos">
+              Committed to preserving the culinary integrity and Siddha wellness tradition of Tamil Nadu through slow stone-milled podis, sun-dried herbs, and zero synthetic preservatives.
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#9CA3AF' }}>
-              <ShieldCheck size={16} color="#8FD19E" />
-              <span>100% Traditional Soil-to-Kitchen Authenticity</span>
+            <div className="footer-direct-phone">
+              <Phone size={15} />
+              <span>WhatsApp: {SITE_CONFIG.whatsapp.displayNumber}</span>
             </div>
           </div>
 
           {/* Quick Navigation */}
-          <div>
-            <h4 className="footer-col-title">Explore Store</h4>
-            <ul className="footer-links-list">
+          <div className="footer-nav-col">
+            <h4 className="footer-col-title">Navigation</h4>
+            <ul className="footer-link-list">
               <li>
-                <button onClick={() => onNavigate('home')} className="footer-link">Home</button>
+                <button onClick={() => onNavigate && onNavigate('home')}>Home</button>
               </li>
               <li>
-                <button onClick={() => onNavigate('store')} className="footer-link">All Products (8)</button>
+                <button onClick={() => onNavigate && onNavigate('store')}>Full Catalog (8 Podis)</button>
               </li>
               <li>
-                <a href="#heritage-story" className="footer-link">Our Heritage Story</a>
+                <a href="#heritage-story">Our Heritage Philosophy</a>
               </li>
               <li>
-                <a href="#why-dhanam" className="footer-link">Why Dhanam Organics</a>
+                <a href="#why-dhanam">Four Pillars of Purity</a>
               </li>
               <li>
-                <a href="#customer-trust" className="footer-link">Customer Reviews</a>
+                <a href="#customer-trust">Customer Reviews</a>
               </li>
             </ul>
           </div>
 
-          {/* Direct WhatsApp Ordering */}
-          <div>
-            <h4 className="footer-col-title">Order On WhatsApp</h4>
-            <p style={{ fontSize: '13.5px', color: '#A0AEC0', marginBottom: '14px', lineHeight: '1.5' }}>
-              We take orders directly via WhatsApp for personalized service and fast packing.
+          {/* Catalog Categories */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-title">Collections</h4>
+            <ul className="footer-link-list">
+              <li>
+                <button onClick={() => onNavigate && onNavigate('store')}>Heritage Podis (இட்லி & சாதம்)</button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate && onNavigate('store')}>Herbal & Joint Care (பிரண்டை, முடவாட்டுக்கால்)</button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate && onNavigate('store')}>Daily Staples (ரசம், பருப்பு பொடி)</button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Store Owner & Management */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-title">Store Management</h4>
+            <p className="footer-admin-note">
+              Authorized portal for inventory, catalog updates, and product pricing.
             </p>
             <a 
-              href={whatsappUrl} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="btn btn-whatsapp btn-sm"
-              style={{ display: 'inline-flex' }}
+              href="./php/admin.php" 
+              className="footer-admin-link"
+              title="Store Owner Admin Panel"
             >
-              <MessageCircle size={15} />
-              <span>{SITE_CONFIG.whatsapp.displayNumber}</span>
+              <Shield size={14} />
+              <span>Owner Admin Portal</span>
             </a>
-            <div style={{ fontSize: '12px', color: '#718096', marginTop: '10px' }}>
-              Hours: {SITE_CONFIG.whatsapp.supportHours}
-            </div>
-          </div>
-
-          {/* Regional Roots & Location */}
-          <div>
-            <h4 className="footer-col-title">Location & Contact</h4>
-            <ul className="footer-links-list">
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13.5px', color: '#A0AEC0' }}>
-                <MapPin size={16} style={{ marginTop: '2px', flexShrink: 0 }} />
-                <span>{SITE_CONFIG.contact.location}</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', color: '#A0AEC0' }}>
-                <Phone size={16} style={{ flexShrink: 0 }} />
-                <span>{SITE_CONFIG.contact.phone}</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', color: '#A0AEC0' }}>
-                <Mail size={16} style={{ flexShrink: 0 }} />
-                <span>{SITE_CONFIG.contact.email}</span>
-              </li>
-              <li style={{ marginTop: '12px' }}>
-                <a 
-                  href="./php/admin.php" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  style={{ fontSize: '12px', color: '#8FD19E', textDecoration: 'underline' }}
-                >
-                  Owner / Product Manager Portal ↗
-                </a>
-              </li>
-            </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="footer-bottom-bar">
-          <div>
-            © {new Date().getFullYear()} Dhanam Organics ({SITE_CONFIG.brandNameTamil}). All rights reserved.
-          </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <span>Static GoDaddy Shared Hosting Ready</span>
-            <span>•</span>
-            <span>PHP/MySQL Backend Prepared</span>
+        {/* Footer Bottom Bar */}
+        <div className="footer-bottom-strip">
+          <p>© {new Date().getFullYear()} Dhanam Organics (தனம் ஆர்கானிக்ஸ்). All rights reserved.</p>
+          <div className="footer-bottom-badges">
+            <span>100% Traditional South Indian Craft</span>
+            <button 
+              onClick={scrollToTop} 
+              className="footer-back-to-top"
+              title="Return to top"
+              aria-label="Return to top"
+            >
+              <span>Top</span>
+              <ArrowUp size={14} />
+            </button>
           </div>
         </div>
       </div>

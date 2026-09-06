@@ -1,12 +1,13 @@
 import React from 'react';
 import { ArrowRight, MessageCircle, Sparkles } from 'lucide-react';
 import Hero from '../components/Hero';
+import ProductCarousel from '../components/ProductCarousel';
 import CategoryShowcase from '../components/CategoryShowcase';
-import ProductCard from '../components/ProductCard';
 import BrandStory from '../components/BrandStory';
 import WhyDhanam from '../components/WhyDhanam';
 import CustomerTrust from '../components/CustomerTrust';
 import { SITE_CONFIG } from '../config/siteConfig';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export default function HomePage({ 
   products = [], 
@@ -15,92 +16,131 @@ export default function HomePage({
   onAddToCart,
   onSelectCategory 
 }) {
+  useScrollReveal();
+
   const featuredProducts = products.filter(p => p.isFeatured);
-  const generalWhatsAppUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to place an order for your organic traditional podis.')}`;
+  const heritageProducts = products.filter(p => p.categorySlug === 'heritage-podis' || p.category === 'Heritage Podis');
+  const herbalProducts = products.filter(p => p.categorySlug === 'herbal-wellness' || p.category === 'Herbal & Wellness');
+
+  const generalWhatsAppUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to place an order for your authentic stone-ground podis.')}`;
 
   return (
-    <main>
-      {/* 1. Cinematic Hero Section */}
+    <main className="master-homepage-canvas">
+      {/* 1. Atmospheric Master Editorial Hero */}
       <Hero 
         onExploreStore={() => onNavigateToStore('all')} 
         onSelectProduct={(productId) => {
           const found = products.find(p => p.id === productId);
-          if (found) onSelectProduct(found);
+          if (found && onSelectProduct) onSelectProduct(found);
         }}
         featuredProducts={featuredProducts}
       />
 
-      {/* 2. Featured Products Section */}
-      <section className="section" style={{ background: '#FFFFFF' }}>
-        <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', flexWrap: 'wrap', gap: '16px' }}>
-            <div>
-              <span className="section-pretitle">Hand-Roasted Favorites</span>
-              <h2 className="section-title" style={{ marginBottom: '4px' }}>Featured Harvest</h2>
-              <p className="section-subtitle">
-                Our most celebrated stone-ground podis, crafted fresh every week.
-              </p>
-            </div>
+      {/* 2. Continuous Organic Marquee Ribbon */}
+      <div className="vault-marquee-strip">
+        <div className="vault-marquee-track">
+          <span>DHANAM ORGANICS</span>
+          <span className="marquee-dot">✦</span>
+          <span>பாரம்பரிய இயற்கை நலம்</span>
+          <span className="marquee-dot">✦</span>
+          <span>SLOW STONE-GROUND AT 28 RPM</span>
+          <span className="marquee-dot">✦</span>
+          <span>ZERO CHEMICAL PRESERVATIVES</span>
+          <span className="marquee-dot">✦</span>
+          <span>DIRECT FROM ORGANIC TAMIL FARMS</span>
+          <span className="marquee-dot">✦</span>
+          <span>AUTHENTIC ANCESTRAL RECIPES</span>
+          <span className="marquee-dot">✦</span>
+          <span>DHANAM ORGANICS</span>
+          <span className="marquee-dot">✦</span>
+          <span>பாரம்பரிய இயற்கை நலம்</span>
+          <span className="marquee-dot">✦</span>
+          <span>SLOW STONE-GROUND AT 28 RPM</span>
+          <span className="marquee-dot">✦</span>
+          <span>ZERO CHEMICAL PRESERVATIVES</span>
+          <span className="marquee-dot">✦</span>
+          <span>DIRECT FROM ORGANIC TAMIL FARMS</span>
+          <span className="marquee-dot">✦</span>
+        </div>
+      </div>
 
+      {/* 3. Horizontal Vault Collection 01: All 8 Stone-Ground Podis */}
+      <section className="section-dark-forest reveal-on-scroll">
+        <div className="container">
+          <ProductCarousel 
+            products={products}
+            pretitle="THE COMPLETE VAULT • அனைத்து பொருட்கள்"
+            title="Stone-Milled Heritage Collection"
+            subtitle="Drag or slide horizontally across our entire small-batch harvest. Handcrafted in earthenware and milled on slow stones."
+            onSelectProduct={onSelectProduct}
+            onAddToCart={onAddToCart}
+            darkTheme={true}
+          />
+
+          <div className="vault-center-action">
             <button 
               onClick={() => onNavigateToStore('all')} 
-              className="btn btn-secondary"
+              className="vault-explore-all-btn"
             >
-              <span>View All 8 Products</span>
+              <span>View Filterable Store Catalog (8 Podis)</span>
               <ArrowRight size={16} />
             </button>
-          </div>
-
-          <div className="products-grid">
-            {featuredProducts.slice(0, 4).map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onSelect={onSelectProduct} 
-                onAddToCart={onAddToCart} 
-              />
-            ))}
           </div>
         </div>
       </section>
 
-      {/* 3. Category Showcase */}
+      {/* 4. Warm Sandal Heritage Story (Magazine Spread) */}
+      <BrandStory onExploreStory={() => onNavigateToStore('all')} />
+
+      {/* 5. Asymmetrical Category Discovery */}
       <CategoryShowcase onSelectCategory={onSelectCategory} />
 
-      {/* 4. Brand Heritage & Ancestral Story */}
-      <BrandStory />
+      {/* 6. Horizontal Vault Collection 02: Herbal & Therapeutic Spotlight */}
+      <section className="section-medium-sandal reveal-on-scroll">
+        <div className="container">
+          <ProductCarousel 
+            products={herbalProducts.length > 0 ? herbalProducts : featuredProducts}
+            pretitle="ANCIENT SIDDHA WISDOM • மூலிகை நலம்"
+            title="Therapeutic Herbal Formulations"
+            subtitle="Medicinal bone-strengthening Pirandai, soothing Mudavattukal soup podi, and nutrient-dense Moringa."
+            onSelectProduct={onSelectProduct}
+            onAddToCart={onAddToCart}
+            darkTheme={false}
+          />
+        </div>
+      </section>
 
-      {/* 5. Why Dhanam Organics */}
+      {/* 7. Four Pillars of Purity (Deep Moss Timeline) */}
       <WhyDhanam />
 
-      {/* 6. Customer Trust & Reviews */}
+      {/* 8. Customer Chronicles (Parchment Testimonials) */}
       <CustomerTrust />
 
-      {/* 7. Final Shopping CTA */}
-      <section className="shopping-cta-section">
+      {/* 9. Direct WhatsApp Concierge Dispatch Banner */}
+      <section className="vault-dispatch-cta reveal-on-scroll">
         <div className="container">
-          <div className="cta-content-box">
-            <h2>Pure Food for Wholesome Living</h2>
-            <p>
-              Experience the authentic taste of Tamil Nadu's traditional kitchens. Order your favorite stone-milled podis directly via WhatsApp with doorstep dispatch.
+          <div className="dispatch-box">
+            <div className="dispatch-kicker">PERSONAL KITCHEN ORDERING</div>
+            <h2 className="dispatch-title">Wholesome Living, Delivered Doorstep</h2>
+            <p className="dispatch-para">
+              Every jar is freshly milled and dispatched directly from Tamil Nadu to your home. Connect with us on WhatsApp to order individual jars or custom family wellness assortments.
             </p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+            <div className="dispatch-btn-row">
               <button 
                 onClick={() => onNavigateToStore('all')} 
-                className="btn btn-primary"
-                style={{ backgroundColor: 'var(--color-gold)', borderColor: 'var(--color-gold)', color: '#1C1E1B' }}
+                className="dispatch-primary-btn"
               >
-                <span>Browse All Products</span>
+                <span>Browse Store Catalog</span>
                 <ArrowRight size={17} />
               </button>
               <a 
                 href={generalWhatsAppUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="btn btn-whatsapp"
+                className="dispatch-whatsapp-btn"
               >
                 <MessageCircle size={18} />
-                <span>Order on WhatsApp</span>
+                <span>Message on WhatsApp</span>
               </a>
             </div>
           </div>

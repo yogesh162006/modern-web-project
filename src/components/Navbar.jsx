@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, ShoppingBag, Menu, X, Search } from 'lucide-react';
-import { SITE_CONFIG, getWhatsAppOrderUrl } from '../config/siteConfig';
+import { SITE_CONFIG } from '../config/siteConfig';
 
 export default function Navbar({ activePage, setActivePage, cartItems = [], onOpenCart, onOpenSearch }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const totalCartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
@@ -20,7 +29,7 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
       setTimeout(() => {
         const el = document.getElementById(sectionId);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      }, 120);
     } else {
       const el = document.getElementById(sectionId);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -30,44 +39,49 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
   const quickGeneralOrderUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to inquire about your organic products and place an order.')}`;
 
   return (
-    <header className="navbar-wrapper">
-      {/* Top Announcement Bar */}
-      <div className="announcement-bar">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>🌿 பாரம்பரிய இயற்கை நலம் • 100% Traditional Stone-Ground Farm Podis</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            WhatsApp Order Hotline: <strong className="highlight">{SITE_CONFIG.whatsapp.displayNumber}</strong>
-          </span>
+    <header className={`vault-header-wrapper ${isScrolled ? 'is-scrolled' : ''}`}>
+      {/* Top Atmospheric Strip */}
+      <div className="vault-top-strip">
+        <div className="container vault-top-strip-inner">
+          <div className="strip-left">
+            <span className="strip-accent">🌿 தனம் ஆர்கானிக்ஸ்</span>
+            <span className="strip-divider">•</span>
+            <span>100% Traditional Stone-Milled Farm Podis</span>
+          </div>
+          <div className="strip-right">
+            <span>WhatsApp Ordering:</span>
+            <strong className="strip-phone">{SITE_CONFIG.whatsapp.displayNumber}</strong>
+          </div>
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <nav className="navbar">
-        <div className="container navbar-inner">
+      {/* Main Glassmorphic Navigation Bar */}
+      <nav className="vault-navbar">
+        <div className="container vault-navbar-inner">
           {/* Brand Logo & Name */}
           <a 
             href="#home" 
             onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} 
-            className="brand-link"
-            title="Dhanam Organics Homepage"
+            className="vault-brand-anchor"
+            title="Dhanam Organics Home"
           >
             <img 
               src="./images/logo/logo.jpeg" 
-              alt="Dhanam Organics Official Logo" 
-              className="brand-logo-img" 
+              alt="Dhanam Organics Logo" 
+              className="vault-brand-logo-img" 
             />
-            <div className="brand-text-block">
-              <span className="brand-title-en">{SITE_CONFIG.brandName}</span>
-              <span className="brand-title-ta">{SITE_CONFIG.brandNameTamil}</span>
+            <div className="vault-brand-text">
+              <span className="vault-brand-en">{SITE_CONFIG.brandName}</span>
+              <span className="vault-brand-ta">{SITE_CONFIG.brandNameTamil}</span>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <ul className="nav-links">
+          <ul className="vault-nav-links">
             <li>
               <button 
                 onClick={() => handleNavClick('home')} 
-                className={`nav-item-link ${activePage === 'home' ? 'active' : ''}`}
+                className={`vault-nav-btn ${activePage === 'home' ? 'is-active' : ''}`}
               >
                 Home
               </button>
@@ -75,7 +89,7 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             <li>
               <button 
                 onClick={() => handleNavClick('store')} 
-                className={`nav-item-link ${activePage === 'store' ? 'active' : ''}`}
+                className={`vault-nav-btn ${activePage === 'store' ? 'is-active' : ''}`}
               >
                 Store / Catalog
               </button>
@@ -83,7 +97,7 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             <li>
               <button 
                 onClick={() => handleSectionScroll('heritage-story')} 
-                className="nav-item-link"
+                className="vault-nav-btn"
               >
                 Our Heritage
               </button>
@@ -91,7 +105,7 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             <li>
               <button 
                 onClick={() => handleSectionScroll('why-dhanam')} 
-                className="nav-item-link"
+                className="vault-nav-btn"
               >
                 Why Dhanam
               </button>
@@ -99,35 +113,35 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             <li>
               <button 
                 onClick={() => handleSectionScroll('customer-trust')} 
-                className="nav-item-link"
+                className="vault-nav-btn"
               >
                 Reviews
               </button>
             </li>
           </ul>
 
-          {/* Right Action Icons & WhatsApp Button */}
-          <div className="nav-actions">
+          {/* Nav Actions */}
+          <div className="vault-nav-actions">
             {onOpenSearch && (
               <button 
                 onClick={onOpenSearch}
-                className="btn btn-icon-only" 
-                title="Search Products"
-                aria-label="Search Products"
+                className="vault-icon-btn" 
+                title="Search Podis"
+                aria-label="Search"
               >
-                <Search size={19} />
+                <Search size={18} />
               </button>
             )}
 
             <button 
               onClick={onOpenCart} 
-              className="btn btn-icon-only" 
-              title="View Order Bag"
+              className="vault-icon-btn" 
+              title="View WhatsApp Order Bag"
               aria-label="View Order Bag"
             >
-              <ShoppingBag size={20} />
+              <ShoppingBag size={18} />
               {totalCartCount > 0 && (
-                <span className="cart-count-badge">{totalCartCount}</span>
+                <span className="vault-cart-badge">{totalCartCount}</span>
               )}
             </button>
 
@@ -135,51 +149,51 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
               href={quickGeneralOrderUrl}
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn btn-whatsapp btn-sm"
+              className="vault-whatsapp-btn"
               title="Order on WhatsApp"
             >
-              <MessageCircle size={17} />
+              <MessageCircle size={16} />
               <span>WhatsApp Order</span>
             </a>
 
-            {/* Mobile Toggle Button */}
+            {/* Mobile Toggle */}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-              className="mobile-toggle"
-              aria-label="Toggle Navigation Menu"
+              className="vault-mobile-hamburger"
+              aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Panel */}
         {mobileMenuOpen && (
-          <div className="mobile-nav-panel">
-            <button onClick={() => handleNavClick('home')} className="mobile-nav-link" style={{ textAlign: 'left' }}>
+          <div className="vault-mobile-drawer">
+            <button onClick={() => handleNavClick('home')} className="vault-mobile-item">
               Home
             </button>
-            <button onClick={() => handleNavClick('store')} className="mobile-nav-link" style={{ textAlign: 'left' }}>
-              Store / All Products
+            <button onClick={() => handleNavClick('store')} className="vault-mobile-item">
+              Store / All 8 Products
             </button>
-            <button onClick={() => handleSectionScroll('heritage-story')} className="mobile-nav-link" style={{ textAlign: 'left' }}>
-              Our Heritage Story
+            <button onClick={() => handleSectionScroll('heritage-story')} className="vault-mobile-item">
+              Our Heritage Philosophy
             </button>
-            <button onClick={() => handleSectionScroll('why-dhanam')} className="mobile-nav-link" style={{ textAlign: 'left' }}>
+            <button onClick={() => handleSectionScroll('why-dhanam')} className="vault-mobile-item">
               Why Dhanam Organics
             </button>
-            <button onClick={() => handleSectionScroll('customer-trust')} className="mobile-nav-link" style={{ textAlign: 'left' }}>
+            <button onClick={() => handleSectionScroll('customer-trust')} className="vault-mobile-item">
               Customer Reviews
             </button>
-            <div style={{ paddingTop: '10px' }}>
+            <div className="vault-mobile-footer-btn">
               <a 
                 href={quickGeneralOrderUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="btn btn-whatsapp" 
-                style={{ width: '100%' }}
+                className="vault-whatsapp-btn" 
+                style={{ width: '100%', justifyContent: 'center' }}
               >
-                <MessageCircle size={18} />
+                <MessageCircle size={17} />
                 <span>Order on WhatsApp</span>
               </a>
             </div>

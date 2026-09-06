@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, X, MessageCircle } from 'lucide-react';
+import { Search, X, MessageCircle, SlidersHorizontal, Sparkles } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
 import { SITE_CONFIG } from '../config/siteConfig';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export default function StorePage({ 
   products = [], 
@@ -12,6 +13,8 @@ export default function StorePage({
   onAddToCart,
   initialSearch = ''
 }) {
+  useScrollReveal();
+
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [sortBy, setSortBy] = useState('featured');
 
@@ -29,9 +32,9 @@ export default function StorePage({
       const q = searchQuery.toLowerCase().trim();
       list = list.filter(p => 
         p.name.toLowerCase().includes(q) ||
-        p.tamilName.includes(q) ||
-        p.englishName.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
+        (p.tamilName && p.tamilName.includes(q)) ||
+        (p.englishName && p.englishName.toLowerCase().includes(q)) ||
+        (p.description && p.description.toLowerCase().includes(q))
       );
     }
 
@@ -53,52 +56,38 @@ export default function StorePage({
   const generalWhatsAppUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to inquire about your product catalog.')}`;
 
   return (
-    <div className="store-page-wrapper" style={{ padding: '48px 0 84px' }}>
-      <div className="container">
-        {/* Store Title Bar */}
-        <div style={{ marginBottom: '36px' }}>
-          <span className="section-pretitle">100% Traditional South Indian Podis</span>
-          <h1 className="section-title" style={{ fontSize: '38px', marginBottom: '8px' }}>
-            Store Catalog
-          </h1>
-          <p className="section-subtitle">
-            Authentic stone-milled podis, slow-roasted with country spices and shade-dried herbs. Directly order on WhatsApp.
-          </p>
+    <div className="store-gallery-canvas">
+      {/* Store Header in Deep Forest Green */}
+      <div className="store-gallery-hero">
+        <div className="container">
+          <div className="store-hero-content">
+            <span className="store-hero-kicker">100% TRADITIONAL SOUTH INDIAN MILLING • அங்காடி</span>
+            <h1 className="store-hero-title">The Harvest Catalog</h1>
+            <p className="store-hero-desc">
+              All eight authentic stone-milled podis, slow-roasted with heirloom country spices and native herbs. Order directly on WhatsApp.
+            </p>
+          </div>
         </div>
+      </div>
 
-        {/* Filter Controls Bar */}
-        <div style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          alignItems: 'center', 
-          justifyContent: 'space-between', 
-          gap: '16px', 
-          marginBottom: '28px',
-          background: '#FFFFFF',
-          padding: '16px 20px',
-          borderRadius: 'var(--radius-sm)',
-          border: '1px solid var(--color-border)'
-        }}>
+      <div className="container store-body-container">
+        {/* Gallery Controls Bar */}
+        <div className="store-filter-bar">
           {/* Search Input */}
-          <div style={{ position: 'relative', flex: '1 1 280px', maxWidth: '380px' }}>
-            <Search size={17} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
+          <div className="store-search-field">
+            <Search size={18} className="search-icon" />
             <input 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search podi name, ingredient, Tamil..."
-              style={{
-                width: '100%',
-                padding: '9px 36px 9px 36px',
-                borderRadius: '4px',
-                border: '1px solid var(--color-border)',
-                fontSize: '14px'
-              }}
+              className="search-input-el"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }}
+                className="search-clear-btn"
+                title="Clear Search"
               >
                 <X size={15} />
               </button>
@@ -106,18 +95,12 @@ export default function StorePage({
           </div>
 
           {/* Sort Dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '13px', color: '#718096', fontWeight: 600 }}>Sort by:</span>
+          <div className="store-sort-wrapper">
+            <span className="sort-title-label">Sort:</span>
             <select 
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '4px',
-                border: '1px solid var(--color-border)',
-                fontSize: '13.5px',
-                background: '#FAF7F2'
-              }}
+              className="sort-dropdown-el"
             >
               <option value="featured">Featured First</option>
               <option value="price-asc">Price: Low to High</option>
@@ -127,96 +110,75 @@ export default function StorePage({
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
-        <div className="category-tabs-bar">
+        {/* Category Pills Bar */}
+        <div className="store-category-tabs">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => onSelectCategory(cat.id)}
-              className={`category-tab-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+              onClick={() => onSelectCategory && onSelectCategory(cat.id)}
+              className={`store-cat-pill ${selectedCategory === cat.id ? 'is-active' : ''}`}
             >
               <span>{cat.name}</span>
-              <span className="category-count">{cat.count}</span>
+              <span className="cat-pill-count">{cat.count}</span>
             </button>
           ))}
         </div>
 
-        {/* Products Count Indicator */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', fontSize: '13.5px', color: '#718096' }}>
+        {/* Results Count Line */}
+        <div className="store-count-strip">
           <span>
-            Showing <strong>{filteredProducts.length}</strong> of <strong>{products.length}</strong> authentic products
+            Presenting <strong>{filteredProducts.length}</strong> of <strong>{products.length}</strong> authentic products
           </span>
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              style={{ color: 'var(--color-crimson)', textDecoration: 'underline', fontWeight: 600 }}
+              className="store-reset-search-btn"
             >
-              Clear Search "{searchQuery}"
+              Reset Search "{searchQuery}"
             </button>
           )}
         </div>
 
-        {/* Products Grid */}
+        {/* Gallery Products Grid */}
         {filteredProducts.length === 0 ? (
-          <div style={{ 
-            background: '#FFFFFF', 
-            border: '1px dashed var(--color-border)', 
-            borderRadius: 'var(--radius-sm)', 
-            padding: '60px 24px', 
-            textAlign: 'center' 
-          }}>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: 'var(--color-forest-dark)', marginBottom: '8px' }}>
-              No products found matching "{searchQuery}"
-            </h3>
-            <p style={{ color: '#718096', fontSize: '14px', marginBottom: '20px' }}>
-              Try searching with different terms like "idli", "pirandai", "dal", or reset category.
-            </p>
+          <div className="store-zero-results">
+            <h3>No authentic podis found matching "{searchQuery}"</h3>
+            <p>Try searching for "idli", "pirandai", "dal", or reset category filter.</p>
             <button 
-              onClick={() => { setSearchQuery(''); onSelectCategory('all'); }}
-              className="btn btn-secondary btn-sm"
+              onClick={() => { setSearchQuery(''); onSelectCategory && onSelectCategory('all'); }}
+              className="store-reset-all-btn"
             >
               Reset All Filters
             </button>
           </div>
         ) : (
-          <div className="products-grid">
-            {filteredProducts.map((product) => (
+          <div className="store-gallery-grid">
+            {filteredProducts.map((product, idx) => (
               <ProductCard 
                 key={product.id} 
                 product={product} 
+                index={idx}
                 onSelect={onSelectProduct} 
-                onAddToCart={onAddToCart} 
+                onAddToCart={onAddToCart}
+                darkTheme={false}
               />
             ))}
           </div>
         )}
 
-        {/* Need Help Ordering Banner */}
-        <div style={{ 
-          marginTop: '60px', 
-          background: 'linear-gradient(135deg, #1B4332 0%, #112A1F 100%)', 
-          color: '#fff', 
-          borderRadius: 'var(--radius-md)', 
-          padding: '36px 32px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '20px'
-        }}>
+        {/* Custom Combo & WhatsApp Dispatch Callout */}
+        <div className="store-concierge-callout">
           <div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', marginBottom: '6px' }}>
-              Looking for custom weights or combo packs?
-            </h3>
-            <p style={{ fontSize: '14px', color: '#D8E2DC', maxWidth: '520px', lineHeight: 1.5 }}>
-              Message our store directly on WhatsApp. We can prepare custom gift boxes, bulk family packs, and combo assortments.
+            <h3>Looking for Custom Weights or Family Wellness Packs?</h3>
+            <p>
+              Message our store directly on WhatsApp. We prepare custom gift boxes, bulk family packs, and combo assortments fresh from the mill.
             </p>
           </div>
           <a 
             href={generalWhatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-whatsapp"
+            className="store-whatsapp-callout-btn"
           >
             <MessageCircle size={18} />
             <span>Chat on WhatsApp</span>
