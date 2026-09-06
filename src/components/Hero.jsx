@@ -20,9 +20,9 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
       <div className="hero-ambient-orb hero-ambient-one" />
       <div className="hero-ambient-orb hero-ambient-two" />
       
-      {/* Background Watermark Image — ACTUAL LOGO DO ASSET */}
+      {/* DESKTOP-ONLY Background Watermark Image — Exact Desktop Positioning Kept Untouched */}
       <div 
-        className="hero-logo-watermark-wrapper"
+        className="hero-logo-watermark-wrapper desktop-only-watermark"
         style={{
           transform: `translate(${mouseOffset.x * -0.4}px, ${mouseOffset.y * -0.4}px)`
         }}
@@ -49,18 +49,20 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
         <div className="hero-editorial-grid">
           {/* Left Column: Editorial Typography */}
           <div className="hero-text-column">
-            <h1 className="hero-main-title">
-              Ancestral Soil.
-              <br />
-              <span className="hero-title-highlight">Living Purity.</span>
-              <span className="hero-tamil-script">
-                பாரம்பரிய இயற்கை நலம்
-              </span>
-            </h1>
+            <div className="hero-information-group">
+              <h1 className="hero-main-title">
+                Ancestral Soil.
+                <br />
+                <span className="hero-title-highlight">Living Purity.</span>
+                <span className="hero-tamil-script">
+                  பாரம்பரிய இயற்கை நலம்
+                </span>
+              </h1>
 
-            <p className="hero-narrative">
-              Hand-roasted pulses, native herbs, and stone-ground podis crafted according to ancestral Tamil Nadu kitchen formulations. Zero preservatives, zero chemical stabilizers—pure authentic nutrition delivered straight to your home.
-            </p>
+              <p className="hero-narrative">
+                Hand-roasted pulses, native herbs, and stone-ground podis crafted according to ancestral Tamil Nadu kitchen formulations. Zero preservatives, zero chemical stabilizers—pure authentic nutrition delivered straight to your home.
+              </p>
+            </div>
 
             <div className="hero-actions-row">
               <button 
@@ -101,56 +103,68 @@ export default function Hero({ onExploreStore, onSelectProduct }) {
             </div>
           </div>
 
-          {/* Right Column: 3-Layer Visual Pedestal with Authentic Transparent Jars */}
+          {/* Right Column: Dedicated Product Showcase with strictly bounded Mobile Logo */}
           <div 
-            className="hero-visual-pedestal-stage"
+            className="hero-product-showcase"
             style={{
               transform: `translate(${mouseOffset.x * 0.3}px, ${mouseOffset.y * 0.3}px)`
             }}
           >
-            <div className="hero-pedestal-ground" />
-            
-            {/* Flanking Left Jar: Karuveppilai */}
-            <div 
-              className="hero-floating-jar hero-jar-flank-left"
-              onClick={() => onSelectProduct && onSelectProduct(3)}
-              title="Inspect Karuveppilai Podi"
-            >
+            {/* MOBILE-ONLY BLENDED LOGO — Strictly isolated inside the product visual container */}
+            <div className="hero-mobile-blended-logo" aria-hidden="true">
               <img 
-                src="./images/products/karuveppilai-podi.png" 
-                alt="Curry Leaf Podi" 
+                src="./images/logo/logo-do.png" 
+                alt="" 
+                className="hero-mobile-logo-img" 
               />
-              <span className="hero-jar-tooltip">கருவேப்பிலை பொடி • ₹140</span>
             </div>
 
-            {/* Centerpiece Hero Jar: Pirandai */}
-            <div 
-              className="hero-floating-jar hero-jar-centerpiece"
-              onClick={() => onSelectProduct && onSelectProduct(5)}
-              title="Inspect Pirandai Bone Health Podi"
-            >
-              <div className="hero-center-aura" />
-              <img 
-                src="./images/products/pirandai-podi.png" 
-                alt="Pirandai Podi" 
-              />
-              <div className="hero-spotlight-badge">
-                <Sparkles size={13} />
-                <span>Herbal Specialist • பிரண்டை</span>
+            {/* Product Visual Pedestal Stage */}
+            <div className="hero-visual-pedestal-stage">
+              <div className="hero-pedestal-ground" />
+              
+              {/* Flanking Left Jar: Karuveppilai */}
+              <div 
+                className="hero-floating-jar hero-jar-flank-left"
+                onClick={() => onSelectProduct && onSelectProduct(3)}
+                title="Inspect Karuveppilai Podi"
+              >
+                <img 
+                  src="./images/products/karuveppilai-podi.png" 
+                  alt="Curry Leaf Podi" 
+                />
+                <span className="hero-jar-tooltip">கருவேப்பிலை பொடி • ₹140</span>
               </div>
-            </div>
 
-            {/* Flanking Right Jar: Idli Podi */}
-            <div 
-              className="hero-floating-jar hero-jar-flank-right"
-              onClick={() => onSelectProduct && onSelectProduct(1)}
-              title="Inspect Traditional Idli Podi"
-            >
-              <img 
-                src="./images/products/idli-podi.png" 
-                alt="Idli Podi" 
-              />
-              <span className="hero-jar-tooltip">இட்லி பொடி • ₹130</span>
+              {/* Centerpiece Hero Jar: Pirandai */}
+              <div 
+                className="hero-floating-jar hero-jar-centerpiece"
+                onClick={() => onSelectProduct && onSelectProduct(5)}
+                title="Inspect Pirandai Bone Health Podi"
+              >
+                <div className="hero-center-aura" />
+                <img 
+                  src="./images/products/pirandai-podi.png" 
+                  alt="Pirandai Podi" 
+                />
+                <div className="hero-spotlight-badge">
+                  <Sparkles size={13} />
+                  <span>Herbal Specialist • பிரண்டை</span>
+                </div>
+              </div>
+
+              {/* Flanking Right Jar: Idli Podi */}
+              <div 
+                className="hero-floating-jar hero-jar-flank-right"
+                onClick={() => onSelectProduct && onSelectProduct(1)}
+                title="Inspect Traditional Idli Podi"
+              >
+                <img 
+                  src="./images/products/idli-podi.png" 
+                  alt="Idli Podi" 
+                />
+                <span className="hero-jar-tooltip">இட்லி பொடி • ₹130</span>
+              </div>
             </div>
           </div>
         </div>

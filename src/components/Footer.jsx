@@ -72,9 +72,6 @@ export default function Footer({ onNavigate }) {
               <li>
                 <a href="#why-dhanam">Four Pillars of Purity</a>
               </li>
-              <li>
-                <a href="#customer-trust">Customer Reviews</a>
-              </li>
             </ul>
           </div>
 

@@ -110,14 +110,6 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
                 Why Dhanam
               </button>
             </li>
-            <li>
-              <button 
-                onClick={() => handleSectionScroll('customer-trust')} 
-                className="vault-nav-btn"
-              >
-                Reviews
-              </button>
-            </li>
           </ul>
 
           {/* Nav Actions */}
@@ -181,9 +173,6 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             </button>
             <button onClick={() => handleSectionScroll('why-dhanam')} className="vault-mobile-item">
               Why Dhanam Organics
-            </button>
-            <button onClick={() => handleSectionScroll('customer-trust')} className="vault-mobile-item">
-              Customer Reviews
             </button>
             <div className="vault-mobile-footer-btn">
               <a 

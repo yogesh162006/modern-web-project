@@ -5,7 +5,6 @@ import ProductCarousel from '../components/ProductCarousel';
 import CategoryShowcase from '../components/CategoryShowcase';
 import BrandStory from '../components/BrandStory';
 import WhyDhanam from '../components/WhyDhanam';
-import CustomerTrust from '../components/CustomerTrust';
 import { SITE_CONFIG } from '../config/siteConfig';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -113,10 +112,7 @@ export default function HomePage({
       {/* 7. Four Pillars of Purity (Deep Moss Timeline) */}
       <WhyDhanam />
 
-      {/* 8. Customer Chronicles (Parchment Testimonials) */}
-      <CustomerTrust />
-
-      {/* 9. Direct WhatsApp Concierge Dispatch Banner */}
+      {/* 8. Direct WhatsApp Concierge Dispatch Banner */}
       <section className="vault-dispatch-cta reveal-on-scroll">
         <div className="container">
           <div className="dispatch-box">
