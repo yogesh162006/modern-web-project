@@ -38,8 +38,8 @@ export default function AuroraExperience({ onExploreProducts, onDiscoverStory })
         <Aurora
           colorStops={["#27ff4b", "#ffffff", "#17d723"]}
           amplitude={0.6}
-          blend={0.8}
-          speed={0.95}
+          blend={0.9}
+          speed={1}
           hoverBoost={isButtonHovered}
         />
       </div>
@@ -137,7 +137,6 @@ export default function AuroraExperience({ onExploreProducts, onDiscoverStory })
               {/* Interactive Guidance Indicator */}
               <div className="aurora-guidance-pill">
                 <Sparkles size={12} className="aurora-guidance-icon" />
-                <span>Move cursor or touch to guide the living aurora</span>
               </div>
             </div>
           </div>
