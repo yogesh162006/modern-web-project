@@ -135,9 +135,7 @@ export default function AuroraExperience({ onExploreProducts, onDiscoverStory })
               </div>
 
               {/* Interactive Guidance Indicator */}
-              <div className="aurora-guidance-pill">
-                <Sparkles size={12} className="aurora-guidance-icon" />
-              </div>
+              <div className="aurora-guidance-pill"></div>
             </div>
           </div>
         </div>
