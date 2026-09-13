@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -16,6 +19,37 @@ export default function App() {
   const [activeModalProduct, setActiveModalProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Initialize GSAP ScrollSmoother across the application
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+    const smoother = ScrollSmoother.create({
+      wrapper: '#smooth-wrapper',
+      content: '#smooth-content',
+      smooth: 0.5, // Snappy, instant 0-latency response with micro-smoothing
+      effects: false, // Avoid redundant matrix calculations for maximum FPS
+      smoothTouch: false, // 100% native 1:1 instant touch responsiveness on mobile
+      ignoreMobileResize: true,
+    });
+
+    return () => {
+      smoother.kill();
+    };
+  }, []);
+
+  // When changing pages, reset scroll smoothly to top and refresh ScrollTrigger
+  useEffect(() => {
+    const smoother = ScrollSmoother.get();
+    if (smoother) {
+      smoother.scrollTo(0, false);
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [activePage]);
 
   // Load products from PHP API on mount (or static fallback)
   useEffect(() => {
@@ -70,7 +104,12 @@ export default function App() {
   const handleSelectCategory = (catId) => {
     setSelectedCategory(catId);
     setActivePage('store');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const smoother = ScrollSmoother.get();
+    if (smoother) {
+      smoother.scrollTo(0, false);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // Related products for modal
@@ -83,7 +122,7 @@ export default function App() {
       {/* 144Hz Hardware-Accelerated Custom Cursor */}
       <CustomCursor />
 
-      {/* Navigation Bar */}
+      {/* Fixed Sticky Navigation Bar (Kept outside #smooth-wrapper to maintain fixed positioning) */}
       <Navbar 
         activePage={activePage}
         setActivePage={setActivePage}
@@ -91,36 +130,42 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenSearch={() => {
           setActivePage('store');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const smoother = ScrollSmoother.get();
+          if (smoother) smoother.scrollTo(0, false);
+          else window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
 
-      {/* Pages */}
-      {activePage === 'home' ? (
-        <HomePage 
-          products={products}
-          onNavigateToStore={(cat = 'all') => handleSelectCategory(cat)}
-          onSelectProduct={(prod) => setActiveModalProduct(prod)}
-          onAddToCart={handleAddToCart}
-          onSelectCategory={handleSelectCategory}
-        />
-      ) : (
-        <StorePage 
-          products={products}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          onSelectProduct={(prod) => setActiveModalProduct(prod)}
-          onAddToCart={handleAddToCart}
-        />
-      )}
+      {/* GSAP ScrollSmoother Structure */}
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          {/* Active Page View */}
+          {activePage === 'home' ? (
+            <HomePage 
+              products={products}
+              onNavigateToStore={(cat = 'all') => handleSelectCategory(cat)}
+              onSelectProduct={(prod) => setActiveModalProduct(prod)}
+              onAddToCart={handleAddToCart}
+              onSelectCategory={handleSelectCategory}
+            />
+          ) : (
+            <StorePage 
+              products={products}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              onSelectProduct={(prod) => setActiveModalProduct(prod)}
+              onAddToCart={handleAddToCart}
+            />
+          )}
 
-      {/* Footer */}
-      <Footer onNavigate={(page) => {
-        setActivePage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }} />
+          {/* Master Footer (Scrolls with page content) */}
+          <Footer onNavigate={(page) => {
+            setActivePage(page);
+          }} />
+        </div>
+      </div>
 
-      {/* Product Detail Modal */}
+      {/* Product Detail Modal (Outside smooth-wrapper to stay fixed on screen) */}
       {activeModalProduct && (
         <ProductDetailModal 
           product={activeModalProduct}
@@ -131,7 +176,7 @@ export default function App() {
         />
       )}
 
-      {/* WhatsApp Quick Order Bag Drawer */}
+      {/* WhatsApp Quick Order Bag Drawer (Outside smooth-wrapper to stay fixed on screen) */}
       <QuickOrderDrawer 
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}

@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, ShoppingBag, Menu, X, Search } from 'lucide-react';
 import { SITE_CONFIG } from '../config/siteConfig';
+import { smoothScrollTo } from '../utils/scroll';
 
 export default function Navbar({ activePage, setActivePage, cartItems = [], onOpenCart, onOpenSearch }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+    let lastScrolled = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 30;
+          if (scrolled !== lastScrolled) {
+            lastScrolled = scrolled;
+            setIsScrolled(scrolled);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -19,7 +33,7 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
   const handleNavClick = (pageId) => {
     setActivePage(pageId);
     setMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    smoothScrollTo(0);
   };
 
   const handleSectionScroll = (sectionId) => {
@@ -27,12 +41,10 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
     if (activePage !== 'home') {
       setActivePage('home');
       setTimeout(() => {
-        const el = document.getElementById(sectionId);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 120);
+        smoothScrollTo('#' + sectionId, 80);
+      }, 150);
     } else {
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      smoothScrollTo('#' + sectionId, 80);
     }
   };
 

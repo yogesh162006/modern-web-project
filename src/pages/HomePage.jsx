@@ -5,6 +5,7 @@ import ProductCarousel from '../components/ProductCarousel';
 import CategoryShowcase from '../components/CategoryShowcase';
 import BrandStory from '../components/BrandStory';
 import WhyDhanam from '../components/WhyDhanam';
+import AuroraExperience from '../components/AuroraExperience';
 import { SITE_CONFIG } from '../config/siteConfig';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -63,8 +64,11 @@ export default function HomePage({
         </div>
       </div>
 
-      {/* 3. Horizontal Vault Collection 01: All 8 Stone-Ground Podis */}
-      <section className="section-dark-forest reveal-on-scroll">
+      {/* 3. Dedicated Interactive Living Aurora Sanctuary - Atmospheric Gateway */}
+      <AuroraExperience />
+
+      {/* 4. Horizontal Vault Collection 01: All 8 Stone-Ground Podis */}
+      <section id="vault-products" className="section-dark-forest reveal-on-scroll">
         <div className="container">
           <ProductCarousel 
             products={products}
@@ -88,13 +92,13 @@ export default function HomePage({
         </div>
       </section>
 
-      {/* 4. Warm Sandal Heritage Story (Magazine Spread) */}
+      {/* 5. Warm Sandal Heritage Story (Magazine Spread) */}
       <BrandStory onExploreStory={() => onNavigateToStore('all')} />
 
-      {/* 5. Asymmetrical Category Discovery */}
+      {/* 6. Asymmetrical Category Discovery */}
       <CategoryShowcase onSelectCategory={onSelectCategory} />
 
-      {/* 6. Horizontal Vault Collection 02: Herbal & Therapeutic Spotlight */}
+      {/* 7. Horizontal Vault Collection 02: Herbal & Therapeutic Spotlight */}
       <section className="section-medium-sandal reveal-on-scroll">
         <div className="container">
           <ProductCarousel 
@@ -109,10 +113,10 @@ export default function HomePage({
         </div>
       </section>
 
-      {/* 7. Four Pillars of Purity (Deep Moss Timeline) */}
+      {/* 8. Four Pillars of Purity (Deep Moss Timeline) */}
       <WhyDhanam />
 
-      {/* 8. Direct WhatsApp Concierge Dispatch Banner */}
+      {/* 9. Direct WhatsApp Concierge Dispatch Banner */}
       <section className="vault-dispatch-cta reveal-on-scroll">
         <div className="container">
           <div className="dispatch-box">
