@@ -38,7 +38,7 @@ export default function AuroraExperience({ onExploreProducts, onDiscoverStory })
         <Aurora
           colorStops={["#27ff4b", "#ffffff", "#17d723"]}
           amplitude={0.6}
-          blend={0.9}
+          blend={0.8}
           speed={1}
           hoverBoost={isButtonHovered}
         />

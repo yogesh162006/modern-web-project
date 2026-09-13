@@ -66,16 +66,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
   line-height: 1.65;
-  overflow-x: hidden;
   width: 100%;
-  max-width: 100vw;
   background-color: var(--bg-canvas);
 }
 
@@ -115,8 +111,6 @@ body {
 
 #root, .master-homepage-canvas, .store-gallery-canvas, main {
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
 img {
@@ -258,23 +252,20 @@ a {
   50% { opacity: 1; transform: scale(1.08); }
 }
 
-/* Scroll Reveal Utility */
+/* Scroll Reveal Utility - Pure opacity to eliminate layout reflow / scroll bounce */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.65s var(--ease-editorial), transform 0.65s var(--ease-editorial);
-  will-change: opacity, transform;
+  transition: opacity 0.5s ease-out;
+  will-change: opacity;
 }
 
 .reveal-on-scroll.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 @media (max-width: 640px) {
   .reveal-on-scroll {
-    transform: translateY(14px);
-    transition-duration: 0.5s;
+    transition-duration: 0.4s;
   }
 }
 
@@ -297,6 +288,19 @@ a {
   font-size: 12px;
   padding: 7px 0;
   letter-spacing: 0.04em;
+  max-height: 42px;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s ease;
+  will-change: max-height, opacity, transform;
+}
+
+.vault-header-wrapper.header-collapsed .vault-top-strip {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
 }
 
 .vault-top-strip-inner {
@@ -335,7 +339,7 @@ a {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(45, 90, 64, 0.12);
-  transition: var(--transition-smooth);
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
   width: 100%;
 }
 
@@ -351,12 +355,20 @@ a {
   justify-content: space-between;
   height: 80px;
   gap: 16px;
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vault-header-wrapper.header-collapsed .vault-navbar-inner {
+  height: 64px;
 }
 
 @media (max-width: 640px) {
   .vault-navbar-inner {
     height: 68px;
     gap: 10px;
+  }
+  .vault-header-wrapper.header-collapsed .vault-navbar-inner {
+    height: 56px;
   }
 }
 
@@ -3688,6 +3700,412 @@ a {
   .aurora-guidance-pill {
     font-size: 10px;
     padding: 4px 10px;
+  }
+}
+
+/* ==========================================================================
+   SIGNATURE PRODUCT SPOTLIGHT (Refined Physical 3D Display)
+   ========================================================================== */
+
+.product-3d-showcase-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #030a05;
+  color: #ffffff;
+  overflow: hidden;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-3d-viewport-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Subtle dark depth backdrop (zero artificial green circles or discs) */
+.product-3d-deep-ambience {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 45% 50%, rgba(15, 38, 22, 0.45) 0%, rgba(3, 10, 5, 0.95) 70%, #030a05 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.product-3d-stage-grid {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1240px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 80px 32px;
+  box-sizing: border-box;
+}
+
+/* Left: 3D Product Perspective Stage */
+.product-3d-display-stage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-3d-perspective-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+
+.product-3d-jar-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.product-3d-jar-image {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.82)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Natural floor shadow directly underneath the physical jar */
+.product-3d-ground-shadow {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 45%, transparent 72%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Right: Clean, Unobstructed Product Information Area */
+.product-3d-details-stage {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.product-3d-cards-carrier {
+  position: relative;
+  width: 100%;
+  min-height: 440px;
+}
+
+.product-3d-card-pane {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  will-change: transform, opacity;
+  box-sizing: border-box;
+}
+
+.product-3d-category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.product-3d-badge-subtle {
+  font-size: 10px;
+  font-weight: 700;
+  color: #030a05;
+  background: #25d366;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.product-3d-name-tamil {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.product-3d-name-english {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: rgba(220, 245, 226, 0.72);
+  font-weight: 500;
+  margin: 0 0 18px;
+  letter-spacing: 0.02em;
+}
+
+.product-3d-price-lockup {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.product-3d-current-price {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.product-3d-orig-price {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.38);
+  text-decoration: line-through;
+}
+
+.product-3d-weight-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: #25d366;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.product-3d-description-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(220, 245, 226, 0.85);
+  margin: 0 0 22px;
+  max-width: 480px;
+}
+
+.product-3d-benefits-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.product-3d-benefit-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #e4fbee;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+
+.product-3d-benefit-pill .benefit-icon {
+  color: #25d366;
+  flex-shrink: 0;
+}
+
+/* Action Buttons: Crisp, Elevated, No Overlapping or Behind Elements */
+.product-3d-actions-cluster {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.product-3d-order-whatsapp-btn {
+  position: relative;
+  z-index: 12;
+  background: #25D366;
+  color: #030a05;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.35);
+}
+
+.product-3d-order-whatsapp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.48);
+}
+
+.product-3d-quick-view-btn {
+  position: relative;
+  z-index: 12;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.product-3d-quick-view-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 960px) {
+  .product-3d-stage-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 70px 24px;
+  }
+  .product-3d-display-stage {
+    height: 280px;
+  }
+  .product-3d-perspective-box {
+    perspective: 800px;
+  }
+  .product-3d-jar-item {
+    width: 220px;
+    height: 270px;
+  }
+  .product-3d-ground-shadow {
+    width: 180px;
+    height: 24px;
+  }
+  .product-3d-details-stage {
+    min-height: 380px;
+  }
+  .product-3d-cards-carrier {
+    min-height: 380px;
+  }
+  .product-3d-name-tamil {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .product-3d-viewport-container {
+    height: auto;
+    min-height: 100vh;
+  }
+  .product-3d-stage-grid {
+    padding: 60px 16px 24px;
+    gap: 16px;
+  }
+  .product-3d-display-stage {
+    height: 230px;
+  }
+  .product-3d-perspective-box {
+    perspective: 650px;
+  }
+  .product-3d-jar-item {
+    width: 180px;
+    height: 220px;
+  }
+  .product-3d-ground-shadow {
+    width: 150px;
+    height: 20px;
+    bottom: 8px;
+  }
+  .product-3d-details-stage {
+    min-height: 420px;
+  }
+  .product-3d-cards-carrier {
+    min-height: 420px;
+  }
+  .product-3d-card-pane {
+    top: 0;
+    transform: none;
+    text-align: center;
+  }
+  .product-3d-category-pill {
+    justify-content: center;
+  }
+  .product-3d-name-tamil {
+    font-size: 24px;
+  }
+  .product-3d-name-english {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .product-3d-price-lockup {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .product-3d-current-price {
+    font-size: 26px;
+  }
+  .product-3d-description-text {
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 auto 16px;
+    max-width: 360px;
+  }
+  .product-3d-benefits-strip {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .product-3d-actions-cluster {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .product-3d-order-whatsapp-btn,
+  .product-3d-quick-view-btn {
+    justify-content: center;
+    padding: 12px 18px;
   }
 }
 

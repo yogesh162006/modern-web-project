@@ -4,8 +4,8 @@ import Hero from '../components/Hero';
 import ProductCarousel from '../components/ProductCarousel';
 import CategoryShowcase from '../components/CategoryShowcase';
 import BrandStory from '../components/BrandStory';
-import WhyDhanam from '../components/WhyDhanam';
 import AuroraExperience from '../components/AuroraExperience';
+import Product3DExperience from '../components/Product3DExperience';
 import { SITE_CONFIG } from '../config/siteConfig';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -19,8 +19,6 @@ export default function HomePage({
   useScrollReveal();
 
   const featuredProducts = products.filter(p => p.isFeatured);
-  const heritageProducts = products.filter(p => p.categorySlug === 'heritage-podis' || p.category === 'Heritage Podis');
-  const herbalProducts = products.filter(p => p.categorySlug === 'herbal-wellness' || p.category === 'Herbal & Wellness');
 
   const generalWhatsAppUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to place an order for your authentic stone-ground podis.')}`;
 
@@ -67,7 +65,14 @@ export default function HomePage({
       {/* 3. Dedicated Interactive Living Aurora Sanctuary - Atmospheric Gateway */}
       <AuroraExperience />
 
-      {/* 4. Horizontal Vault Collection 01: All 8 Stone-Ground Podis */}
+      {/* 4. Signature 3D Product Scroll Discovery (Physical 3D Turntable) */}
+      <Product3DExperience 
+        products={products}
+        onSelectProduct={onSelectProduct}
+        onAddToCart={onAddToCart}
+      />
+
+      {/* 5. Horizontal Vault Collection: All 8 Stone-Ground Podis */}
       <section id="vault-products" className="section-dark-forest reveal-on-scroll">
         <div className="container">
           <ProductCarousel 
@@ -92,29 +97,11 @@ export default function HomePage({
         </div>
       </section>
 
-      {/* 5. Warm Sandal Heritage Story (Magazine Spread) */}
+      {/* 6. Warm Sandal Heritage Story & Purity Rigor (Magazine Spread) */}
       <BrandStory onExploreStory={() => onNavigateToStore('all')} />
 
-      {/* 6. Asymmetrical Category Discovery */}
+      {/* 7. Asymmetrical Category Discovery */}
       <CategoryShowcase onSelectCategory={onSelectCategory} />
-
-      {/* 7. Horizontal Vault Collection 02: Herbal & Therapeutic Spotlight */}
-      <section className="section-medium-sandal reveal-on-scroll">
-        <div className="container">
-          <ProductCarousel 
-            products={herbalProducts.length > 0 ? herbalProducts : featuredProducts}
-            pretitle="ANCIENT SIDDHA WISDOM • மூலிகை நலம்"
-            title="Therapeutic Herbal Formulations"
-            subtitle="Medicinal bone-strengthening Pirandai, soothing Mudavattukal soup podi, and nutrient-dense Moringa."
-            onSelectProduct={onSelectProduct}
-            onAddToCart={onAddToCart}
-            darkTheme={false}
-          />
-        </div>
-      </section>
-
-      {/* 8. Four Pillars of Purity (Deep Moss Timeline) */}
-      <WhyDhanam />
 
       {/* 9. Direct WhatsApp Concierge Dispatch Banner */}
       <section className="vault-dispatch-cta reveal-on-scroll">

@@ -6,19 +6,32 @@ import { smoothScrollTo } from '../utils/scroll';
 export default function Navbar({ activePage, setActivePage, cartItems = [], onOpenCart, onOpenSearch }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
     let ticking = false;
-    let lastScrolled = false;
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          const scrolled = window.scrollY > 30;
-          if (scrolled !== lastScrolled) {
-            lastScrolled = scrolled;
-            setIsScrolled(scrolled);
+          const currentScrollY = window.scrollY;
+          const delta = currentScrollY - lastScrollY;
+
+          // Smoothly hide top announcement on scroll down, restore on scroll up
+          if (currentScrollY > 60) {
+            setIsScrolled(true);
+            if (delta > 6) {
+              setIsHeaderCollapsed(true); // Scrolling down
+            } else if (delta < -6) {
+              setIsHeaderCollapsed(false); // Scrolling up
+            }
+          } else {
+            setIsScrolled(currentScrollY > 15);
+            setIsHeaderCollapsed(false);
           }
+
+          lastScrollY = currentScrollY > 0 ? currentScrollY : 0;
           ticking = false;
         });
         ticking = true;
@@ -51,8 +64,8 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
   const quickGeneralOrderUrl = `https://wa.me/${SITE_CONFIG.whatsapp.phoneNumber}?text=${encodeURIComponent('Hi Dhanam Organics, I would like to inquire about your organic products and place an order.')}`;
 
   return (
-    <header className={`vault-header-wrapper ${isScrolled ? 'is-scrolled' : ''}`}>
-      {/* Top Atmospheric Strip */}
+    <header className={`vault-header-wrapper ${isScrolled ? 'is-scrolled' : ''} ${isHeaderCollapsed ? 'header-collapsed' : 'header-expanded'}`}>
+      {/* Top Atmospheric Strip - Collapses seamlessly on scroll down, restores on scroll up */}
       <div className="vault-top-strip">
         <div className="container vault-top-strip-inner">
           <div className="strip-left">
@@ -100,6 +113,14 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             </li>
             <li>
               <button 
+                onClick={() => handleSectionScroll('signature-3d-experience')} 
+                className="vault-nav-btn"
+              >
+                Signature Podis
+              </button>
+            </li>
+            <li>
+              <button 
                 onClick={() => handleNavClick('store')} 
                 className={`vault-nav-btn ${activePage === 'store' ? 'is-active' : ''}`}
               >
@@ -112,14 +133,6 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
                 className="vault-nav-btn"
               >
                 Our Heritage
-              </button>
-            </li>
-            <li>
-              <button 
-                onClick={() => handleSectionScroll('why-dhanam')} 
-                className="vault-nav-btn"
-              >
-                Why Dhanam
               </button>
             </li>
           </ul>
@@ -177,14 +190,14 @@ export default function Navbar({ activePage, setActivePage, cartItems = [], onOp
             <button onClick={() => handleNavClick('home')} className="vault-mobile-item">
               Home
             </button>
+            <button onClick={() => handleSectionScroll('signature-3d-experience')} className="vault-mobile-item">
+              Signature Podis
+            </button>
             <button onClick={() => handleNavClick('store')} className="vault-mobile-item">
               Store / All 8 Products
             </button>
             <button onClick={() => handleSectionScroll('heritage-story')} className="vault-mobile-item">
               Our Heritage Philosophy
-            </button>
-            <button onClick={() => handleSectionScroll('why-dhanam')} className="vault-mobile-item">
-              Why Dhanam Organics
             </button>
             <div className="vault-mobile-footer-btn">
               <a 

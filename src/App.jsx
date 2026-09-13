@@ -24,17 +24,33 @@ export default function App() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-    const smoother = ScrollSmoother.create({
-      wrapper: '#smooth-wrapper',
-      content: '#smooth-content',
-      smooth: 0.5, // Snappy, instant 0-latency response with micro-smoothing
-      effects: false, // Avoid redundant matrix calculations for maximum FPS
-      smoothTouch: false, // 100% native 1:1 instant touch responsiveness on mobile
-      ignoreMobileResize: true,
+    // Clean up any stale smoother instance from StrictMode
+    if (ScrollSmoother.get()) {
+      ScrollSmoother.get().kill();
+    }
+
+    const ctx = gsap.context(() => {
+      ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 0.4, // Snappy, instant 0-latency response with micro-smoothing
+        effects: false, // Avoid redundant matrix calculations
+        smoothTouch: false, // 100% native 1:1 instant touch responsiveness on mobile
+        ignoreMobileResize: true,
+      });
     });
 
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', handleLoad);
+
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+
     return () => {
-      smoother.kill();
+      clearTimeout(timer);
+      window.removeEventListener('load', handleLoad);
+      ctx.revert();
     };
   }, []);
 
@@ -50,6 +66,14 @@ export default function App() {
       window.scrollTo(0, 0);
     }
   }, [activePage]);
+
+  // Refresh ScrollTrigger whenever product data loads or changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [products]);
 
   // Load products from PHP API on mount (or static fallback)
   useEffect(() => {
