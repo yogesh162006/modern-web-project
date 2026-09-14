@@ -28,12 +28,17 @@ export default function Product3DExperience({
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia(sectionRef);
+
+    // =========================================================================
+    // 1. DESKTOP EXPERIENCE (min-width: 1025px)
+    // Preserved 100% — existing desktop behavior is completely undisturbed
+    // =========================================================================
+    mm.add("(min-width: 1025px)", () => {
       const jarItems = gsap.utils.toArray('.product-3d-jar-item');
       const cardPanes = gsap.utils.toArray('.product-3d-card-pane');
 
       // Initialize initial placement:
-      // Item 0 is active and fully visible, subsequent items placed in depth with autoAlpha: 0
       jarItems.forEach((jar, i) => {
         if (i === 0) {
           gsap.set(jar, { 
@@ -66,7 +71,7 @@ export default function Product3DExperience({
         }
       });
 
-      // Master ScrollTrigger timeline pinned naturally — no React re-renders on scroll
+      // Master ScrollTrigger timeline pinned naturally
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -79,13 +84,11 @@ export default function Product3DExperience({
         }
       });
 
-      // Step-by-step physical 3D rotation and depth transitions
       const step = 1 / (items.length - 1);
 
       for (let i = 0; i < items.length - 1; i++) {
         const time = i * step;
 
-        // Current product rotates slightly and moves back into depth
         tl.to(jarItems[i], {
           autoAlpha: 0,
           scale: 0.88,
@@ -105,7 +108,6 @@ export default function Product3DExperience({
           ease: 'power2.in'
         }, time);
 
-        // Next product enters smoothly from depth and settles into place
         tl.fromTo(jarItems[i + 1], {
           autoAlpha: 0,
           scale: 0.88,
@@ -137,9 +139,173 @@ export default function Product3DExperience({
           ease: 'power2.out'
         }, time + step * 0.25);
       }
-    }, sectionRef);
+    });
 
-    return () => ctx.revert();
+    // =========================================================================
+    // 2. MOBILE & TABLET EXPERIENCE (max-width: 1024px)
+    // Non-colliding, depth-sorted, centered 3D transitions with zero overlap
+    // =========================================================================
+    mm.add("(max-width: 1024px)", () => {
+      const isTablet = window.innerWidth >= 641;
+      const jarItems = gsap.utils.toArray('.product-3d-jar-item');
+      const cardPanes = gsap.utils.toArray('.product-3d-card-pane');
+
+      // Calibrated parameters: controlled rotation, depth, scale, and trajectory
+      const rotY = isTablet ? 11 : 8;
+      const rotX = isTablet ? 2.2 : 1.6;
+      const transX = isTablet ? 24 : 14;
+      const transZ = isTablet ? -60 : -35;
+      const depthScale = isTablet ? 0.92 : 0.94;
+
+      // 1. Precise Initial Placement with explicit zIndex and center transform
+      jarItems.forEach((jar, i) => {
+        if (i === 0) {
+          gsap.set(jar, {
+            autoAlpha: 1,
+            scale: 1,
+            rotateY: 0,
+            rotateX: 0,
+            x: 0,
+            z: 0,
+            xPercent: -50,
+            yPercent: -50,
+            zIndex: 10,
+            pointerEvents: 'auto'
+          });
+        } else {
+          gsap.set(jar, {
+            autoAlpha: 0,
+            scale: depthScale,
+            rotateY: rotY,
+            rotateX: -rotX,
+            x: transX,
+            z: transZ,
+            xPercent: -50,
+            yPercent: -50,
+            zIndex: 1,
+            pointerEvents: 'none'
+          });
+        }
+      });
+
+      cardPanes.forEach((card, i) => {
+        if (i === 0) {
+          gsap.set(card, {
+            autoAlpha: 1,
+            y: 0,
+            zIndex: 10,
+            pointerEvents: 'auto'
+          });
+        } else {
+          gsap.set(card, {
+            autoAlpha: 0,
+            y: 10,
+            zIndex: 1,
+            pointerEvents: 'none'
+          });
+        }
+      });
+
+      // 2. Natural, responsive touch scroll distance
+      const totalTransitions = items.length - 1;
+      const scrollDistanceVh = totalTransitions * (isTablet ? 72 : 62);
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: `+=${scrollDistanceVh}vh`,
+          pin: true,
+          scrub: 0.3, // Fast, natural touch response without lagging or fighting the finger
+          anticipatePin: 0,
+          invalidateOnRefresh: true,
+        }
+      });
+
+      // 3. Staggered non-colliding transitions:
+      // Each transition occupies exactly 1.0 unit of timeline time: [i, i + 1]
+      for (let i = 0; i < totalTransitions; i++) {
+        const tStart = i * 1.0;
+        const currentJar = jarItems[i];
+        const nextJar = jarItems[i + 1];
+        const currentCard = cardPanes[i];
+        const nextCard = cardPanes[i + 1];
+
+        // Phase A: Current Product gracefully rotates into negative depth [tStart + 0.08 -> tStart + 0.62]
+        tl.to(currentJar, {
+          autoAlpha: 0,
+          scale: depthScale,
+          rotateY: -rotY,
+          rotateX: rotX,
+          x: -transX,
+          z: transZ,
+          duration: 0.54,
+          ease: 'power1.inOut',
+          onStart: () => {
+            gsap.set(currentJar, { zIndex: 4, pointerEvents: 'none' });
+          }
+        }, tStart + 0.08)
+        .to(currentCard, {
+          autoAlpha: 0,
+          y: -10,
+          duration: 0.40,
+          ease: 'power1.in',
+          onStart: () => {
+            gsap.set(currentCard, { zIndex: 4, pointerEvents: 'none' });
+          }
+        }, tStart + 0.08);
+
+        // Phase B: Next Product enters smoothly through depth [tStart + 0.32 -> tStart + 0.84]
+        tl.fromTo(nextJar, {
+          autoAlpha: 0,
+          scale: depthScale,
+          rotateY: rotY,
+          rotateX: -rotX,
+          x: transX,
+          z: transZ,
+          xPercent: -50,
+          yPercent: -50,
+          zIndex: 8,
+          pointerEvents: 'none'
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          rotateY: 0,
+          rotateX: 0,
+          x: 0,
+          z: 0,
+          xPercent: -50,
+          yPercent: -50,
+          duration: 0.52,
+          ease: 'power1.out',
+          immediateRender: false, // Prevents premature overwriting of subsequent products
+          onComplete: () => {
+            gsap.set(nextJar, { zIndex: 10, pointerEvents: 'auto' });
+          }
+        }, tStart + 0.32)
+        .fromTo(nextCard, {
+          autoAlpha: 0,
+          y: 10,
+          zIndex: 8,
+          pointerEvents: 'none'
+        }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.44,
+          ease: 'power1.out',
+          immediateRender: false,
+          onComplete: () => {
+            gsap.set(nextCard, { zIndex: 10, pointerEvents: 'auto' });
+          }
+        }, tStart + 0.38);
+
+        // Phase C: Settle & Rest [tStart + 0.84 -> tStart + 1.00]
+        // Next product is completely settled and interactive. Outgoing product is 100% hidden.
+        // A 0.24 unit rest window ensures zero tween collision before the next transition starts.
+      }
+    });
+
+    return () => mm.revert();
   }, [items.length]);
 
   if (!items || items.length === 0) return null;

@@ -3761,6 +3761,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  isolation: isolate;
+  z-index: 2;
 }
 
 .product-3d-perspective-box {
@@ -3823,6 +3825,8 @@ a {
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  isolation: isolate;
+  z-index: 6;
 }
 
 .product-3d-cards-carrier {
@@ -4001,111 +4005,391 @@ a {
   transform: translateY(-2px);
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 960px) {
+/* =========================================================================
+   Responsive 3D Product Experience Breakpoints
+   - Tablet / Medium screens: max-width: 1024px
+   - Mobile phones: max-width: 640px
+   - Small mobile screens: max-width: 360px
+   Desktop (min-width: 1025px) remains untouched above!
+   ========================================================================= */
+
+@media (max-width: 1024px) {
+  .product-3d-showcase-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .product-3d-viewport-container {
+    height: 100vh;
+    height: 100dvh;
+    min-height: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
   .product-3d-stage-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 70px 24px;
+    gap: 16px;
+    padding: 32px 20px 24px;
+    max-width: 540px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
   }
   .product-3d-display-stage {
-    height: 280px;
+    height: 240px;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .product-3d-perspective-box {
     perspective: 800px;
+    transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
   .product-3d-jar-item {
-    width: 220px;
-    height: 270px;
+    width: 190px;
+    height: 230px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+  }
+  .product-3d-jar-image {
+    max-height: 200px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   .product-3d-ground-shadow {
-    width: 180px;
-    height: 24px;
+    width: 160px;
+    height: 20px;
+    bottom: 8px;
   }
   .product-3d-details-stage {
-    min-height: 380px;
+    position: relative;
+    width: 100%;
+    min-height: 290px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
   }
   .product-3d-cards-carrier {
-    min-height: 380px;
+    position: relative;
+    width: 100%;
+    min-height: 290px;
+  }
+  .product-3d-card-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: transform, opacity;
+  }
+  .product-3d-category-pill {
+    justify-content: center;
+    margin-bottom: 6px;
+    font-size: 11px;
   }
   .product-3d-name-tamil {
-    font-size: 28px;
+    font-size: 26px;
+    line-height: 1.25;
+    margin: 0 0 4px;
+  }
+  .product-3d-name-english {
+    font-size: 14px;
+    margin: 0 0 8px;
+  }
+  .product-3d-price-lockup {
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .product-3d-current-price {
+    font-size: 26px;
+  }
+  .product-3d-orig-price {
+    font-size: 15px;
+  }
+  .product-3d-weight-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+  .product-3d-description-text {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 auto 10px;
+    max-width: 420px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .product-3d-benefits-strip {
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .product-3d-benefit-pill {
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+  .product-3d-actions-cluster {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    max-width: 360px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .product-3d-order-whatsapp-btn {
+    flex: 1.3;
+    justify-content: center;
+    padding: 11px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+    border-radius: 999px;
+  }
+  .product-3d-quick-view-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 11px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+    border-radius: 999px;
   }
 }
 
 @media (max-width: 640px) {
   .product-3d-viewport-container {
-    height: auto;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
+    min-height: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
   .product-3d-stage-grid {
-    padding: 60px 16px 24px;
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 390px;
+    padding: 10px 16px 16px;
+    gap: 6px;
+    box-sizing: border-box;
   }
   .product-3d-display-stage {
-    height: 230px;
+    height: 180px;
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
   }
   .product-3d-perspective-box {
     perspective: 650px;
+    transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
   .product-3d-jar-item {
-    width: 180px;
-    height: 220px;
+    width: 150px;
+    height: 175px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+  }
+  .product-3d-jar-image {
+    max-height: 155px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   .product-3d-ground-shadow {
-    width: 150px;
-    height: 20px;
-    bottom: 8px;
+    width: 120px;
+    height: 16px;
+    bottom: 6px;
   }
   .product-3d-details-stage {
-    min-height: 420px;
+    position: relative;
+    width: 100%;
+    height: 265px;
+    min-height: 265px;
+    flex-shrink: 0;
+    display: block;
   }
   .product-3d-cards-carrier {
-    min-height: 420px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 265px;
   }
   .product-3d-card-pane {
+    position: absolute;
     top: 0;
+    left: 0;
+    width: 100%;
     transform: none;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: transform, opacity;
   }
   .product-3d-category-pill {
+    margin-bottom: 2px;
+    font-size: 10px;
     justify-content: center;
   }
   .product-3d-name-tamil {
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 1.2;
+    margin: 0 0 2px;
   }
   .product-3d-name-english {
-    font-size: 14px;
-    margin-bottom: 12px;
+    font-size: 12.5px;
+    margin: 0 0 6px;
   }
   .product-3d-price-lockup {
+    margin-bottom: 6px;
+    gap: 8px;
     justify-content: center;
-    margin-bottom: 12px;
   }
   .product-3d-current-price {
-    font-size: 26px;
+    font-size: 22px;
+  }
+  .product-3d-orig-price {
+    font-size: 13px;
+  }
+  .product-3d-weight-tag {
+    font-size: 10.5px;
+    padding: 2px 7px;
   }
   .product-3d-description-text {
-    font-size: 13px;
-    line-height: 1.55;
-    margin: 0 auto 16px;
-    max-width: 360px;
+    font-size: 12px;
+    line-height: 1.45;
+    margin: 0 auto 6px;
+    max-width: 310px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .product-3d-benefits-strip {
+    display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    gap: 5px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .product-3d-benefit-pill {
+    font-size: 10px;
+    padding: 2px 7px;
   }
   .product-3d-actions-cluster {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
     max-width: 320px;
     margin: 0 auto;
   }
-  .product-3d-order-whatsapp-btn,
-  .product-3d-quick-view-btn {
+  .product-3d-order-whatsapp-btn {
+    flex: 1.25;
+    padding: 9px 12px;
+    font-size: 12px;
     justify-content: center;
-    padding: 12px 18px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .product-3d-quick-view-btn {
+    flex: 1;
+    padding: 9px 10px;
+    font-size: 12px;
+    justify-content: center;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .product-3d-stage-grid {
+    padding: 6px 10px 12px;
+    gap: 4px;
+    max-width: 320px;
+  }
+  .product-3d-display-stage {
+    height: 160px;
+  }
+  .product-3d-jar-item {
+    width: 135px;
+    height: 155px;
+  }
+  .product-3d-jar-image {
+    max-height: 140px;
+  }
+  .product-3d-details-stage {
+    height: 250px;
+    min-height: 250px;
+  }
+  .product-3d-cards-carrier {
+    min-height: 250px;
+  }
+  .product-3d-name-tamil {
+    font-size: 18px;
+  }
+  .product-3d-name-english {
+    font-size: 11.5px;
+    margin-bottom: 4px;
+  }
+  .product-3d-price-lockup {
+    margin-bottom: 4px;
+  }
+  .product-3d-current-price {
+    font-size: 20px;
+  }
+  .product-3d-actions-cluster {
+    max-width: 290px;
+    gap: 6px;
+  }
+  .product-3d-order-whatsapp-btn {
+    padding: 8px 8px;
+    font-size: 11px;
+  }
+  .product-3d-quick-view-btn {
+    padding: 8px 8px;
+    font-size: 11px;
   }
 }
 

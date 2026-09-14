@@ -97,14 +97,15 @@ export default function Footer({ onNavigate }) {
             <p className="footer-admin-note">
               Authorized portal for inventory, catalog updates, and product pricing.
             </p>
-            <a 
-              href="./php/admin.php" 
+            <button 
+              type="button"
+              onClick={() => onNavigate && onNavigate('admin')}
               className="footer-admin-link"
               title="Store Owner Admin Panel"
             >
               <Shield size={14} />
               <span>Owner Admin Portal</span>
-            </a>
+            </button>
           </div>
         </div>
 

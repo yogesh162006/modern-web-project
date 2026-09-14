@@ -1,6 +1,6 @@
 import { PRODUCTS, CATEGORIES } from '../data/products.js';
 
-const API_BASE = './php';
+const API_BASE = './api';
 
 export async function fetchProducts(params = {}) {
   try {
@@ -23,38 +23,54 @@ export async function fetchProducts(params = {}) {
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error('API status: ' + response.status);
+    if (response.ok) {
+      const data = await response.json();
+      if (data && Array.isArray(data.products) && data.products.length > 0) {
+        return {
+          products: data.products.filter(p => p.in_stock !== false),
+          source: 'php-api',
+          total: data.total || data.products.length
+        };
+      }
     }
-
-    const data = await response.json();
-    if (data && Array.isArray(data.products) && data.products.length > 0) {
-      return {
-        products: data.products,
-        source: 'php-api',
-        total: data.total || data.products.length
-      };
-    }
-    throw new Error('No products in response');
+    throw new Error('API unreachable');
   } catch (err) {
-    let filtered = [...PRODUCTS];
+    // Check if admin has updated products locally in browser storage
+    let baseProducts = [...PRODUCTS];
+    try {
+      const stored = localStorage.getItem('dhanam_admin_products');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          baseProducts = parsed;
+        }
+      }
+    } catch (e) {}
+
+    // Customer only sees products where in_stock !== false
+    let filtered = baseProducts.filter(p => p.in_stock !== false);
 
     if (params.category && params.category !== 'all') {
-      filtered = filtered.filter(p => p.categorySlug === params.category || p.category === params.category);
+      filtered = filtered.filter(p => 
+        (p.categorySlug && p.categorySlug === params.category) || 
+        (p.category_slug && p.category_slug === params.category) || 
+        p.category === params.category
+      );
     }
 
     if (params.search) {
-      const q = params.search.toLowerCase();
+      const q = params.search.toLowerCase().trim();
       filtered = filtered.filter(p => 
-        p.name.toLowerCase().includes(q) ||
-        p.tamilName.includes(q) ||
-        p.englishName.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q)
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.tamilName && p.tamilName.includes(q)) ||
+        (p.tamil_name && p.tamil_name.includes(q)) ||
+        (p.englishName && p.englishName.toLowerCase().includes(q)) ||
+        (p.category && p.category.toLowerCase().includes(q))
       );
     }
 
     if (params.featured) {
-      filtered = filtered.filter(p => p.isFeatured);
+      filtered = filtered.filter(p => p.isFeatured || p.is_featured);
     }
 
     return {
