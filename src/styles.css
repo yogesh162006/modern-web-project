@@ -3264,8 +3264,8 @@ a {
 
 @media (max-width: 768px) {
   .aurora-fullscreen-section {
-    min-height: 100svh;
-    padding: 64px 0 72px;
+    min-height: 90svh;
+    padding: 56px 0 36px;
   }
 }
 
@@ -3731,13 +3731,83 @@ a {
   overflow: hidden;
 }
 
-/* Subtle dark depth backdrop (zero artificial green circles or discs) */
-.product-3d-deep-ambience {
+/* ==========================================================================
+   LIVING ORGANIC ATMOSPHERE (Behind 3D Stage - Layer 1)
+   Soft, cinematic organic light inspired by ancient Tamil herbal canopy
+   ========================================================================== */
+.product-3d-atmosphere {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 45% 50%, rgba(15, 38, 22, 0.45) 0%, rgba(3, 10, 5, 0.95) 70%, #030a05 100%);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   pointer-events: none;
   z-index: 1;
+  background: #030a05;
+}
+
+/* Layer A: Organic Chlorophyll & Sage Diffusion (Slow 22s majestic drift) */
+.product-3d-aura-sage {
+  position: absolute;
+  top: 20%;
+  left: 22%;
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(23, 215, 35, 0.13) 0%, rgba(45, 106, 79, 0.08) 45%, rgba(3, 10, 5, 0) 72%);
+  filter: blur(80px);
+  will-change: transform, opacity;
+  animation: auraDriftSage 22s ease-in-out infinite alternate;
+}
+
+/* Layer B: Gentle Morning Mist & Warm White Highlight (Slow 26s counter-drift) */
+.product-3d-aura-mist {
+  position: absolute;
+  top: 25%;
+  right: 18%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.045) 0%, rgba(39, 255, 75, 0.06) 40%, rgba(3, 10, 5, 0) 70%);
+  filter: blur(85px);
+  will-change: transform, opacity;
+  animation: auraDriftMist 26s ease-in-out infinite alternate;
+}
+
+/* Layer C: Natural Ground Pedestal Light Pool directly beneath the Jar */
+.product-3d-aura-pedestal {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(39, 255, 75, 0.08) 0%, rgba(15, 38, 22, 0.04) 50%, transparent 75%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* Layer D: Soft Vignette & Seamless Top/Bottom Atmosphere Blends */
+.product-3d-aura-vignette {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(180deg, rgba(3, 12, 7, 0.95) 0%, transparent 15%, transparent 85%, rgba(3, 10, 5, 0.98) 100%),
+    radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(3, 10, 5, 0.75) 100%);
+  pointer-events: none;
+}
+
+@keyframes auraDriftSage {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.85; }
+  50% { transform: translate(5%, 6%) scale(1.06); opacity: 1; }
+  100% { transform: translate(-4%, 3%) scale(0.96); opacity: 0.8; }
+}
+
+@keyframes auraDriftMist {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+  50% { transform: translate(-6%, -4%) scale(1.05); opacity: 0.95; }
+  100% { transform: translate(4%, -5%) scale(0.94); opacity: 0.7; }
 }
 
 .product-3d-stage-grid {
@@ -4023,28 +4093,58 @@ a {
     height: 100dvh;
     min-height: unset;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
     overflow: hidden;
+    box-sizing: border-box;
+  }
+  /* Living Atmosphere tablet adjustments */
+  .product-3d-aura-sage {
+    width: 420px;
+    height: 420px;
+    top: 14%;
+    left: 18%;
+    filter: blur(65px);
+  }
+  .product-3d-aura-mist {
+    width: 360px;
+    height: 360px;
+    top: 18%;
+    right: 14%;
+    filter: blur(65px);
+  }
+  .product-3d-aura-pedestal {
+    width: 360px;
+    height: 200px;
+    top: 25%;
+    left: 50%;
+    filter: blur(35px);
   }
   .product-3d-stage-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 32px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 20px 20px;
     max-width: 540px;
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
   }
   .product-3d-display-stage {
-    height: 240px;
+    height: 230px;
     width: 100%;
-    max-width: 440px;
+    max-width: 420px;
     margin: 0 auto;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
   .product-3d-perspective-box {
     perspective: 800px;
@@ -4055,7 +4155,7 @@ a {
   }
   .product-3d-jar-item {
     width: 190px;
-    height: 230px;
+    height: 220px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -4066,28 +4166,29 @@ a {
     will-change: transform, opacity;
   }
   .product-3d-jar-image {
-    max-height: 200px;
+    max-height: 190px;
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
   .product-3d-ground-shadow {
-    width: 160px;
-    height: 20px;
-    bottom: 8px;
+    width: 150px;
+    height: 18px;
+    bottom: 6px;
   }
   .product-3d-details-stage {
     position: relative;
     width: 100%;
-    min-height: 290px;
+    min-height: 280px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    flex-shrink: 0;
   }
   .product-3d-cards-carrier {
     position: relative;
     width: 100%;
-    min-height: 290px;
+    min-height: 280px;
   }
   .product-3d-card-pane {
     position: absolute;
@@ -4159,6 +4260,7 @@ a {
     max-width: 360px;
     margin: 0 auto;
     width: 100%;
+    z-index: 10;
   }
   .product-3d-order-whatsapp-btn {
     flex: 1.3;
@@ -4184,25 +4286,54 @@ a {
     height: 100dvh;
     min-height: unset;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
     overflow: hidden;
+    box-sizing: border-box;
+  }
+  /* Living Atmosphere mobile adjustments: positioned directly behind the jar */
+  .product-3d-aura-sage {
+    width: 280px;
+    height: 280px;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-60%);
+    filter: blur(50px);
+  }
+  .product-3d-aura-mist {
+    width: 240px;
+    height: 240px;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-40%);
+    filter: blur(45px);
+  }
+  .product-3d-aura-pedestal {
+    width: 260px;
+    height: 150px;
+    top: 18%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(28px);
   }
   .product-3d-stage-grid {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
     max-width: 390px;
-    padding: 10px 16px 16px;
-    gap: 6px;
+    padding: 4px 16px 12px;
+    gap: 4px;
     box-sizing: border-box;
   }
   .product-3d-display-stage {
-    height: 180px;
+    height: 175px;
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4218,7 +4349,7 @@ a {
   }
   .product-3d-jar-item {
     width: 150px;
-    height: 175px;
+    height: 170px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -4229,15 +4360,15 @@ a {
     will-change: transform, opacity;
   }
   .product-3d-jar-image {
-    max-height: 155px;
+    max-height: 150px;
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
   .product-3d-ground-shadow {
     width: 120px;
-    height: 16px;
-    bottom: 6px;
+    height: 15px;
+    bottom: 4px;
   }
   .product-3d-details-stage {
     position: relative;
@@ -4277,10 +4408,10 @@ a {
   }
   .product-3d-name-english {
     font-size: 12.5px;
-    margin: 0 0 6px;
+    margin: 0 0 5px;
   }
   .product-3d-price-lockup {
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     gap: 8px;
     justify-content: center;
   }
@@ -4297,8 +4428,8 @@ a {
   .product-3d-description-text {
     font-size: 12px;
     line-height: 1.45;
-    margin: 0 auto 6px;
-    max-width: 310px;
+    margin: 0 auto 5px;
+    max-width: 320px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -4308,7 +4439,7 @@ a {
     display: flex;
     justify-content: center;
     gap: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     flex-wrap: wrap;
   }
   .product-3d-benefit-pill {
@@ -4324,6 +4455,7 @@ a {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
+    z-index: 10;
   }
   .product-3d-order-whatsapp-btn {
     flex: 1.25;
@@ -4344,43 +4476,76 @@ a {
 }
 
 @media (max-width: 360px) {
+  .product-3d-viewport-container {
+    padding-top: max(10px, env(safe-area-inset-top));
+  }
+  .product-3d-aura-sage {
+    width: 220px;
+    height: 220px;
+    top: 8%;
+    filter: blur(40px);
+  }
+  .product-3d-aura-mist {
+    width: 190px;
+    height: 190px;
+    top: 12%;
+    filter: blur(35px);
+  }
+  .product-3d-aura-pedestal {
+    width: 200px;
+    height: 120px;
+    top: 18%;
+    filter: blur(22px);
+  }
   .product-3d-stage-grid {
-    padding: 6px 10px 12px;
-    gap: 4px;
-    max-width: 320px;
+    padding: 4px 8px 8px;
+    gap: 2px;
+    max-width: 310px;
   }
   .product-3d-display-stage {
-    height: 160px;
+    height: 145px;
   }
   .product-3d-jar-item {
-    width: 135px;
-    height: 155px;
+    width: 130px;
+    height: 145px;
   }
   .product-3d-jar-image {
-    max-height: 140px;
+    max-height: 130px;
   }
   .product-3d-details-stage {
-    height: 250px;
-    min-height: 250px;
+    height: 245px;
+    min-height: 245px;
   }
   .product-3d-cards-carrier {
-    min-height: 250px;
+    min-height: 245px;
   }
   .product-3d-name-tamil {
     font-size: 18px;
   }
   .product-3d-name-english {
-    font-size: 11.5px;
-    margin-bottom: 4px;
+    font-size: 11px;
+    margin-bottom: 3px;
   }
   .product-3d-price-lockup {
     margin-bottom: 4px;
   }
   .product-3d-current-price {
-    font-size: 20px;
+    font-size: 19px;
+  }
+  .product-3d-description-text {
+    font-size: 11px;
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+  .product-3d-benefits-strip {
+    margin-bottom: 6px;
+  }
+  .product-3d-benefit-pill {
+    font-size: 9.5px;
+    padding: 2px 6px;
   }
   .product-3d-actions-cluster {
-    max-width: 290px;
+    max-width: 280px;
     gap: 6px;
   }
   .product-3d-order-whatsapp-btn {
@@ -4388,7 +4553,7 @@ a {
     font-size: 11px;
   }
   .product-3d-quick-view-btn {
-    padding: 8px 8px;
+    padding: 8px 6px;
     font-size: 11px;
   }
 }

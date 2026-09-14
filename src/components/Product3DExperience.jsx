@@ -206,9 +206,10 @@ export default function Product3DExperience({
         }
       });
 
-      // 2. Natural, responsive touch scroll distance
+      // 2. Natural, calibrated touch scroll distance:
+      // 35vh per product on mobile (approx. 1 natural thumb swipe), 45vh on tablet
       const totalTransitions = items.length - 1;
-      const scrollDistanceVh = totalTransitions * (isTablet ? 72 : 62);
+      const scrollDistanceVh = totalTransitions * (isTablet ? 45 : 35);
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -216,11 +217,29 @@ export default function Product3DExperience({
           start: 'top top',
           end: `+=${scrollDistanceVh}vh`,
           pin: true,
-          scrub: 0.3, // Fast, natural touch response without lagging or fighting the finger
+          scrub: 0.2, // Ultra-responsive 0.2s scrub: instantaneous 1:1 finger tracking, zero lag
           anticipatePin: 0,
           invalidateOnRefresh: true,
         }
       });
+
+      // Subtle atmospheric lighting drift on scroll
+      const auraSage = sectionRef.current.querySelector('.product-3d-aura-sage');
+      const auraMist = sectionRef.current.querySelector('.product-3d-aura-mist');
+      if (auraSage && auraMist) {
+        tl.to(auraSage, {
+          x: '4%',
+          y: '5%',
+          duration: totalTransitions,
+          ease: 'none'
+        }, 0)
+        .to(auraMist, {
+          x: '-4%',
+          y: '-3%',
+          duration: totalTransitions,
+          ease: 'none'
+        }, 0);
+      }
 
       // 3. Staggered non-colliding transitions:
       // Each transition occupies exactly 1.0 unit of timeline time: [i, i + 1]
@@ -231,7 +250,7 @@ export default function Product3DExperience({
         const currentCard = cardPanes[i];
         const nextCard = cardPanes[i + 1];
 
-        // Phase A: Current Product gracefully rotates into negative depth [tStart + 0.08 -> tStart + 0.62]
+        // Phase A: Current Product gracefully rotates into negative depth [tStart + 0.08 -> tStart + 0.60]
         tl.to(currentJar, {
           autoAlpha: 0,
           scale: depthScale,
@@ -239,7 +258,7 @@ export default function Product3DExperience({
           rotateX: rotX,
           x: -transX,
           z: transZ,
-          duration: 0.54,
+          duration: 0.52,
           ease: 'power1.inOut',
           onStart: () => {
             gsap.set(currentJar, { zIndex: 4, pointerEvents: 'none' });
@@ -248,14 +267,14 @@ export default function Product3DExperience({
         .to(currentCard, {
           autoAlpha: 0,
           y: -10,
-          duration: 0.40,
+          duration: 0.38,
           ease: 'power1.in',
           onStart: () => {
             gsap.set(currentCard, { zIndex: 4, pointerEvents: 'none' });
           }
         }, tStart + 0.08);
 
-        // Phase B: Next Product enters smoothly through depth [tStart + 0.32 -> tStart + 0.84]
+        // Phase B: Next Product enters smoothly through depth [tStart + 0.28 -> tStart + 0.80]
         tl.fromTo(nextJar, {
           autoAlpha: 0,
           scale: depthScale,
@@ -278,11 +297,11 @@ export default function Product3DExperience({
           yPercent: -50,
           duration: 0.52,
           ease: 'power1.out',
-          immediateRender: false, // Prevents premature overwriting of subsequent products
+          immediateRender: false,
           onComplete: () => {
             gsap.set(nextJar, { zIndex: 10, pointerEvents: 'auto' });
           }
-        }, tStart + 0.32)
+        }, tStart + 0.28)
         .fromTo(nextCard, {
           autoAlpha: 0,
           y: 10,
@@ -297,11 +316,11 @@ export default function Product3DExperience({
           onComplete: () => {
             gsap.set(nextCard, { zIndex: 10, pointerEvents: 'auto' });
           }
-        }, tStart + 0.38);
+        }, tStart + 0.34);
 
-        // Phase C: Settle & Rest [tStart + 0.84 -> tStart + 1.00]
+        // Phase C: Settle & Rest [tStart + 0.80 -> tStart + 1.00]
         // Next product is completely settled and interactive. Outgoing product is 100% hidden.
-        // A 0.24 unit rest window ensures zero tween collision before the next transition starts.
+        // A 0.28 unit rest window ensures zero tween collision before the next transition starts.
       }
     });
 
@@ -314,8 +333,13 @@ export default function Product3DExperience({
     <section id="signature-3d-experience" ref={sectionRef} className="product-3d-showcase-section">
       <div className="product-3d-viewport-container" ref={containerRef}>
         
-        {/* Subtle dark ambient depth (No artificial shapes or green circles) */}
-        <div className="product-3d-deep-ambience" aria-hidden="true" />
+        {/* Living Organic Atmosphere (Behind product, Layer 1) */}
+        <div className="product-3d-atmosphere" aria-hidden="true">
+          <div className="product-3d-aura-sage" />
+          <div className="product-3d-aura-mist" />
+          <div className="product-3d-aura-pedestal" />
+          <div className="product-3d-aura-vignette" />
+        </div>
 
         <div className="container product-3d-stage-grid">
           
